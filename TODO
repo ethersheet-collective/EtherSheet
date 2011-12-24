@@ -1,0 +1,13 @@
+Features:
+* ability to dynamically resize up to x rows and y columns
+* ability to store data in rows and columns
+* ability to save data and reload spreadsheet
+* ability to co-work on spreadsheet
+* ability to delete/insert row
+* ability to delete/insert column
+* functions in cells (sum, avg, min, max, mean)
+* formatting (money, etc)
+* color formatting
+* resizy cells
+* export to csv
+* export to excel
