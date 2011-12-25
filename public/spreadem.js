@@ -57,6 +57,27 @@ var spreadem = {
       this.row_size = row+2;
     }
     this.redraw_table();
+  },
+  delete_collection: function(index, collection){
+    delete collection[index];
+    new_collection = _.clone(collection);
+    console.log(collection);
+    console.log(new_collection);
+    for(elem in new_collection){
+      console.log(elem);
+      if(elem > index){
+        delete collection[elem]
+        collection[elem - 1] = new_collection[elem];
+      }
+    }
+    console.log(this.sheet_values);
+  },
+  delete_row: function(index){
+    delete_collection(index, this.sheet_values);
+  },
+  delete_columm: function(index){
+    delete_collection(index, this.sheet_values);
+    delete_collection(index, this.sheet_values);
   }
 };
 
