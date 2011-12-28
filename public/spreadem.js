@@ -49,7 +49,7 @@ var spreadem = {
     if(this.sheet_values[row] === undefined){
       this.sheet_values[row] = {}
     }
-    this.sheet_values[row][column] = {guid: 'TODO', val: value}
+    this.sheet_values[row][column] = {guid: _.uniqueId(Math.floor(Math.random() * 100000)), val: value}
     if(column+1 >= this.col_size){
       this.col_size = column+2;
     }
@@ -58,7 +58,7 @@ var spreadem = {
     }
     this.redraw_table();
   },
-  delete_collection: function(index, collection){
+  delete_index: function(index, collection){
     delete collection[index];
     new_collection = _.clone(collection);
     console.log(collection);
@@ -73,11 +73,14 @@ var spreadem = {
     console.log(this.sheet_values);
   },
   delete_row: function(index){
-    delete_collection(index, this.sheet_values);
+    this.delete_index(index, this.sheet_values);
+    this.redraw_table();
   },
-  delete_columm: function(index){
-    delete_collection(index, this.sheet_values);
-    delete_collection(index, this.sheet_values);
+  delete_column: function(index){
+    for( var row in this.sheet_values ){
+      this.delete_index(index, this.sheet_values[row]);
+    }
+    this.redraw_table();
   }
 };
 
