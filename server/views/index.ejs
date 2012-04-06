@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Ethersheet</title>
+  </head>
+  <body>
+    <div id='content-outer'>
+      <div id='content-inner'>
+        <h1> Ethersheet - Collaborative spreadsheets </h1>
+        <form onsubmit="go2Name();return false;" action="#"> 
+          <div id="input_border">
+            <input type="text" autofocus="" id="sheetname"> 
+            <input type="submit" value="OK"> 
+          </div>
+        </form>
+        <p id='about'>
+          Ethersheet is a software libre service provided by <a href='http://radicaldesigns.org'>radicalDesigns</a>,
+          a radical technology company.  Ethersheet allows for real-time group collaboration of spreadsheet documents. 
+          radicalDesigns does not store IP addresses for this service, and we require https. You can also use TOR to 
+          access this service for added security.
+        </p>
+      </div>
+    </div>
+  <script type='text/javascript'>
+  //js code stolen from etherpad http://etherpad.org/  Thanks!!!
+    function go2Name() {
+      var sheetname = document.getElementById("sheetname").value;
+      sheetname.length > 0 ? window.location = "s/" + sheetname : alert("Please enter a name")
+    }
+
+    function setRandomName() {
+      document.getElementById("sheetname").value = randomSheetName();
+    }
+
+    function randomSheetName() 
+    {
+      var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      var string_length = 12;
+      var randomstring = '';
+      for (var i = 0; i < string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        randomstring += chars.substring(rnum, rnum + 1);
+      }
+      return randomstring;
+    }
+    setRandomName();
+  </script>
+  </body>
+</html>
