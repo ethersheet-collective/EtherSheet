@@ -13,6 +13,8 @@
         </script>
         <script type="text/javascript" src="/parser.js">
         </script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/doc.cookie.js"></script>
         <!--/Required-->
 		
 		<!--Optional-->
@@ -49,13 +51,23 @@
                 //every time sheet is created it creates a new jQuery.sheet.instance (array), to manipulate each sheet, the jQuery object is returned
               $.getJSON('/s/<%=sheet_title%>.json', function(data) {
                 var sheet_title = "<%= sheet_title %>";
+                var socket = io.connect('https://localhost');
+
+                socket.on('connect', function() {
+                  console.log('connected');
+                  socket.emit('JOIN_ROOM', { sheet_id:'<%= sheet_title %>', user_id:docCookies.getItem('user_id') });
+                });
+
+                socket.on('USER_CHANGE', function(data){
+                  console.log('a user has ' + data.action); 
+                  console.log('id: ' + data.user_id);
+                  console.log('number of users: ' + data.sheet_data.count);
+                });
+
                 $('#jQuerySheet0').sheet({
                   title: sheet_title,
                   inlineMenu: inlineMenu($.sheet.instance),
                   buildSheet: $.sheet.makeTable.json(data),
-                  fnAfterCellEdit: function(){
-                    alert('foooo!');
-                  },
                   fnSave: function(){
                     $('#jSheetTitle_0').css('background','#f00');
                     $.post('/save', 

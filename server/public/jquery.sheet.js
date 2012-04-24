@@ -551,6 +551,7 @@ jQuery.sheet = {
                               qty: int, the number of cells you'd like to add, if not specified, a dialog will ask; 
                               isBefore: bool, places cells before the selected cell if set to true, otherwise they will go after, or at end
                             */
+          //socket                  
           jS.controlFactory.addCells(atRow, isBefore, atRowQ, 1, 'row');
           jS.trigger('addRow', [atRow, isBefore, atRowQ, 1]);
         },
@@ -558,6 +559,7 @@ jQuery.sheet = {
                               qty: int, the number of cells you'd like to add, if not specified, a dialog will ask; 
                               isBefore: bool, places cells before the selected cell if set to true, otherwise they will go after, or at end
                             */
+                            //socket
           jS.controlFactory.addCells(atColumn, isBefore, atColumnQ, 1, 'col');
           jS.trigger('addColumn', [atRow, isBefore, atRowQ, 1]);
         },
@@ -1170,6 +1172,7 @@ jQuery.sheet = {
         inPlaceEdit: function(td) { /* creates a teaxtarea for a user to put a value in that floats on top of the current selected cell
                         td: object, the cell to be edited
                       */
+                      //socket
           jS.obj.inPlaceEdit().remove();
           var formula = jS.obj.formula();         
           var offset = td.offset();
@@ -1437,6 +1440,8 @@ jQuery.sheet = {
         cellEditDone: function(forceCalc) { /* called to edit a cells value from jS.obj.formula(), afterward setting "fnAfterCellEdit" is called w/ params (td, row, col, spreadsheetIndex, sheetIndex)
                             forceCalc: bool, if set to true forces a calculation of the selected sheet
                           */
+                          //socket
+          console.log(jS.cell);
           switch (jS.cellLast.isEdit || forceCalc) {
             case true:
               jS.obj.inPlaceEdit().remove();
@@ -1454,6 +1459,8 @@ jQuery.sheet = {
                     var v = formula.val();
                     var prevVal = td.text();
                     var cell = jS.spreadsheets[jS.i][jS.cellLast.row][jS.cellLast.col];
+                    console.log('cell edit done');
+                    console.log(cell);
                     if (v.charAt(0) == '=') {
                       td
                         .attr('formula', v)
@@ -1653,8 +1660,7 @@ jQuery.sheet = {
           return true;
         },
         cellOnMouseDown: function(e) {
-
-
+          //socket
           jS.obj.formula().blur();
           if (e.shiftKey) {
             jS.getTdRange(e, jS.obj.formula().val());
@@ -1663,6 +1669,7 @@ jQuery.sheet = {
           }     
         },
         cellOnDblClick: function(e) {
+          //socket
           jS.cellLast.isEdit = jS.isSheetEdit = true;
           jS.controlFactory.inPlaceEdit(jS.cellLast.td);
           //jS.log('click, in place edit activated');
@@ -2438,6 +2445,8 @@ jQuery.sheet = {
         },
         cell: {
           setActive: function() {
+            //socket
+            console.log(this);
             this.clearActive();
             this.setHighlighted(
               jS.cellLast.td
@@ -2624,6 +2633,7 @@ jQuery.sheet = {
 
                         isDrag: bool, should be determained by if the user is dragging their mouse around setting cells;
                         */
+                        //socket
         jS.autoFillerNotGroup = true; //make autoFiller directional again.
         //This finished up the edit of the last cell
         jS.evt.cellEditDone();
@@ -2658,6 +2668,9 @@ jQuery.sheet = {
                                         directional: bool, makes highlighting directional, only left/right or only up/down;
                                         fnDone: function, called after the cells are set active;
                                       */
+                                      //socket
+        console.log(td);
+        console.log(loc);
         if (typeof(loc.col) != 'undefined') {
           jS.cellLast.td = td; //save the current cell/td
           
@@ -3610,6 +3623,7 @@ jQuery.sheet = {
                             style: string, css style name;
                             value: string, css setting;
                           */
+                          //socket
         jS.cellUndoable.add(jS.obj.cellHighlighted()); //save state, make it undoable
         jS.obj.cellHighlighted().css(style, value);
         jS.cellUndoable.add(jS.obj.cellHighlighted()); //save state, make it redoable
