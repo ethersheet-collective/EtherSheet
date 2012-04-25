@@ -23,14 +23,14 @@ http://www.gnu.org/licenses/
 */
 jQuery.fn.extend({
   sheet: function(settings) {
-    jQuery(this).each(function() {
-      var parent = jQuery(this);
+    jQuery(this).each(function() { var parent = jQuery(this);
       var set = jQuery.extend({
         urlGet:       "sheets/enduser.documentation.html", //local url, if you want to get a sheet from a url
         urlSave:      "save.html",          //local url, for use only with the default save for sheet
         editable:       true,               //bool, Makes the jSheetControls_formula & jSheetControls_fx appear
         editableTabs:   true,             //bool, If sheet is editable, this allows users to change the tabs by second click
         barMenus:     true,             //bool, if sheet is editable, this will show the mini menu in barTop and barLeft for sheet manipulation
+        socket: null, //object, websocket connection
         freezableCells:   false,              //bool, if sheet is editable, this will show the barHandles and allow user to drag them to freeze cells, not yet working.
         allowToggleState:   true,             //allows the function that changes the spreadsheet's state from static to editable and back
         urlMenu:      "/menu.html",           //local url, for the menu to the left of title
@@ -107,6 +107,11 @@ jQuery.fn.extend({
 
 jQuery.sheet = {
   createInstance: function(s, I, origParent) { //s = jQuery.sheet settings, I = jQuery.sheet Instance Integer
+    s.socket.on('message', function(data){
+      console.log('got message');
+      console.log({message: data});
+      jS.jSS[data.action](data.args); 
+    });
     var jS = {
       version: '2.0.x trunk',
       i: 0,
@@ -2445,8 +2450,6 @@ jQuery.sheet = {
         },
         cell: {
           setActive: function() {
-            //socket
-            console.log(this);
             this.clearActive();
             this.setHighlighted(
               jS.cellLast.td
@@ -2669,8 +2672,9 @@ jQuery.sheet = {
                                         fnDone: function, called after the cells are set active;
                                       */
                                       //socket
-        console.log(td);
-        console.log(loc);
+        if(s.socket){
+          s.socket.emit('message', {action: 'cell_active', args:loc });
+        }
         if (typeof(loc.col) != 'undefined') {
           jS.cellLast.td = td; //save the current cell/td
           
@@ -4037,6 +4041,15 @@ jQuery.sheet = {
         }
         
         jS.calc();
+      },
+
+      jSS: {
+        cell_active: function(data){
+          console.log('cell active!');
+          var td = jS.getTd(I,data.row,data.col);
+          console.log(s.socket);
+          jQuery(td).css('background', 'black');
+        }
       }
     };
 
@@ -4387,7 +4400,10 @@ jQuery.sheet = {
     return I;
   }
 };
-
+/**********************************
+ * Socket Methods
+ * These will be called based on socket messages coming in.
+ * *******************************/
 var jSE = jQuery.sheet.engine = { //Calculations Engine
   calc: function(tableI, spreadsheets, ignite, freshCalc) { //spreadsheets are array, [spreadsheet][row][cell], like A1 = o[0][0][0];
     for (var j = 0; j < spreadsheets.length; j++) {

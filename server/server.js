@@ -141,7 +141,8 @@ es.get_color = function(count){
     '#FAA166',
     '#FC3F52'
   ];
-  return colors[count % colors.length]
+  idx = Math.floor(Math.random() * 100);  
+  return colors[idx % colors.length]
 };
 
 es.save_sheet = function(sheet_id, sheet_data){

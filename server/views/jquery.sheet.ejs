@@ -58,18 +58,18 @@
 
                 socket.on('connect', function() {
                   console.log('connected');
-                  socket.emit('JOIN_ROOM', { sheet_id:'<%= sheet_title %>', user_id:docCookies.getItem('user_id') });
+                  socket.emit('JOIN_ROOM', { sheet_id: '<%= sheet_title %>', user_id: docCookies.getItem('user_id') });
                 });
 
                 socket.on('USER_CHANGE', function(data){
                   update_usermenu(data.sheet_data);
-                  console.log('a user has ' + data.action); 
-                  console.log('id: ' + data.user_id);
-                  console.log('number of users: ' + data.sheet_data.count);
+                  socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
+                  console.log('a user has ' + data.action + ' with id: ' + data.user_id);
                 });
 
                 $('#jQuerySheet0').sheet({
                   title: sheet_title,
+                  socket: socket,
                   inlineMenu: inlineMenu($.sheet.instance),
                   buildSheet: $.sheet.makeTable.json(data),
                   fnSave: function(){
