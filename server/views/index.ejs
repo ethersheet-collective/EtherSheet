@@ -32,17 +32,6 @@
       document.getElementById("sheetname").value = randomString(12);
     }
 
-    function randomString(length) 
-    {
-      var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      var string_length = length;
-      var randomstring = '';
-      for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        randomstring += chars.substring(rnum, rnum + 1);
-      }
-      return randomstring;
-    }
     setRandomName();
     if(!docCookies.hasItem('user_id')){
       docCookies.setItem('user_id', randomString(20));

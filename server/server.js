@@ -89,7 +89,7 @@ app.get('/s/:sheetid', function(req,res){
 io.sockets.on('connection', function(socket){
 
   socket.on('JOIN_ROOM', function(data){
-    es.add_user_to_room(data.user_id, data.sheet_id) 
+    es.add_user_to_room(socket, data.user_id, data.sheet_id) 
     io.sockets.in(data.sheet_id).emit('USER_CHANGE', {user_id: data.user_id, action: 'JOINED', sheet_data:sheets[data.sheet_id]});
   });
   
@@ -97,14 +97,14 @@ io.sockets.on('connection', function(socket){
   //and don't need to interact with the server.
   socket.on('message', function(data){
     socket.broadcast.to(socket.sheet_id).emit('message', data);
-  }
+  });
 
   socket.on('disconnect', function(){
-    socket.leave(socket.sheet_id);
-    sheets[socket.sheet_id].count--
-    delete(sheets[socket.sheet_id].users[socket.user_id])
-    console.log('user ' + socket.user_id + ' LEFT room ' + socket.sheet_id);
-    io.sockets.in(socket.sheet_id).emit('USER_CHANGE', {user_id: socket.user_id, action: 'LEFT', sheet_data:sheets[socket.sheet_id]});
+    socket.leave(socket.udata.sheet_id);
+    sheets[socket.udata.sheet_id].count--
+    delete(sheets[socket.udata.sheet_id].users[socket.udata.user_id])
+    console.log('user ' + socket.udata.user_id + ' LEFT room ' + socket.udata.sheet_id);
+    io.sockets.in(socket.udata.sheet_id).emit('USER_CHANGE', {user_id: socket.udata.user_id, action: 'LEFT', sheet_data:sheets[socket.udata.sheet_id]});
   });
 
 });
@@ -118,14 +118,16 @@ app.listen(PORT, function(){
 /***********************************************
  * utitilty functions
  ***********************************************/
-es.add_user_to_room = function(user_id, sheet_id){
-  sheets[sheet_id] = sheets[sheet_id] || {count:0, users:{}}
-  sheets[sheet_id].count++
-  socket.user_id = user_id
-  socket.sheet_id = sheet_id
-  socket.nickname = ''
-  socket.color = es.get_color(sheets[sheet_id].count);
-  sheets[sheet_id].users[user_id] = socket
+es.add_user_to_room = function(socket, user_id, sheet_id){
+  sheets[sheet_id] = sheets[sheet_id] || {count:0, users:{}};
+  sheets[sheet_id].count++;
+  socket.udata = {};
+  console.log(socket.udata);
+  socket.udata.user_id = user_id;
+  socket.udata.sheet_id = sheet_id;
+  socket.udata.nickname = '';
+  socket.udata.color = es.get_color(sheets[sheet_id].count);
+  sheets[sheet_id].users[user_id] = socket.udata;
   console.log('user ' + socket.user_id + ' joined room ' + socket.sheet_id);
   socket.join(sheet_id);
 };

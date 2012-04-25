@@ -449,3 +449,20 @@
 { display: none; }
 .styleWrap
 { word-wrap: break-word; }
+#user-menu-container{
+  height: 30px;
+  width: 30px;
+  border: 1px solid #ccc;
+  float: right;
+  top: -15px;
+  position: relative;
+}
+#user-count{
+  font-size: 12px;
+  font-color: #eee;
+  text-align: center;
+  margin: auto;
+  width: 15px;
+  margin-top: 6px;
+}
+
