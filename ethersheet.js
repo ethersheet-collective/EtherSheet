@@ -88,6 +88,8 @@ io.sockets.on('connection', function(socket){
 
   socket.on('JOIN_ROOM', function(data){
     es.find_or_create_user(data.user_id, function(user){ 
+      console.log(data.user_id);
+      console.log(user);
       es.add_user_to_room(socket, user, data.sheet_id) 
       io.sockets.in(data.sheet_id).emit(
         'USER_CHANGE', 
@@ -137,7 +139,7 @@ es.find_or_create_user = function(user_id, callback){
             if(err) {
               throw err;
             } else {
-              callback(results[0]);
+              es.find_or_create_user(user_id, callback);
             }
           }
         );

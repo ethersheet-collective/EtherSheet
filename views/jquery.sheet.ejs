@@ -47,17 +47,17 @@
 		<!--/Optional-->
         <script type="text/javascript">
             $(function(){
-                if(!docCookies.hasItem('user_id')){
-                  docCookies.setItem('user_id', randomString(20));
-                }
                 //Here is where we initiate the sheets
                 //every time sheet is created it creates a new jQuery.sheet.instance (array), to manipulate each sheet, the jQuery object is returned
               $.getJSON('/s/<%=sheet_title%>.json', function(data) {
                 var sheet_title = "<%= sheet_title %>";
-                var socket = io.connect('https://localhost');
+                var socket = io.connect('https://' + location.hostname);
 
                 socket.on('connect', function() {
                   console.log('connected');
+                  if(!docCookies.hasItem('user_id')){
+                    docCookies.setItem('user_id', randomString(20));
+                  }
                   socket.emit('JOIN_ROOM', { sheet_id: '<%= sheet_title %>', user_id: docCookies.getItem('user_id') });
                 });
 
