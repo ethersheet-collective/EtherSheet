@@ -1455,8 +1455,6 @@ jQuery.sheet = {
                   if (td && jS.cellLast.row > -1 && jS.cellLast.col > -1) {
                     //first, let's make it undoable before we edit it
                     jS.cellUndoable.add(td);
-                    //now lets save the sheet
-                    jS.saveSheet();
                     //This should return either a val from textbox or formula, but if fails it tries once more from formula.
                     var v = formula.val();
                     var prevVal = td.text();
@@ -1510,6 +1508,8 @@ jQuery.sheet = {
                     }]);
                   }
               }
+              //now lets save the sheet
+              s.fnSave();
               break;
             default:
               jS.attrH.setHeight(jS.cellLast.row, 'cell', false);
