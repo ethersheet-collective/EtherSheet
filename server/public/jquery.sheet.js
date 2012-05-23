@@ -108,8 +108,6 @@ jQuery.fn.extend({
 jQuery.sheet = {
   createInstance: function(s, I, origParent) { //s = jQuery.sheet settings, I = jQuery.sheet Instance Integer
     s.socket.on('message', function(data){
-      console.log('got message');
-      console.log({message: data});
       jS.jSS[data.action](data.args); 
     });
     var jS = {
@@ -1445,8 +1443,6 @@ jQuery.sheet = {
         cellEditDone: function(forceCalc) { /* called to edit a cells value from jS.obj.formula(), afterward setting "fnAfterCellEdit" is called w/ params (td, row, col, spreadsheetIndex, sheetIndex)
                             forceCalc: bool, if set to true forces a calculation of the selected sheet
                           */
-                          //socket
-          console.log(jS.cell);
           switch (jS.cellLast.isEdit || forceCalc) {
             case true:
               jS.obj.inPlaceEdit().remove();
@@ -1459,13 +1455,15 @@ jQuery.sheet = {
                   if (td && jS.cellLast.row > -1 && jS.cellLast.col > -1) {
                     //first, let's make it undoable before we edit it
                     jS.cellUndoable.add(td);
-                    
+                    //now lets save the sheet
+                    jS.saveSheet();
                     //This should return either a val from textbox or formula, but if fails it tries once more from formula.
                     var v = formula.val();
                     var prevVal = td.text();
                     var cell = jS.spreadsheets[jS.i][jS.cellLast.row][jS.cellLast.col];
                     console.log('cell edit done');
                     console.log(cell);
+                    
                     if (v.charAt(0) == '=') {
                       td
                         .attr('formula', v)
@@ -1483,6 +1481,11 @@ jQuery.sheet = {
                     //reset the cell's value
                     cell.calcCount = 0;
                     
+                    if(s.socket && cell){
+                      cell.row = jS.cellLast.row
+                      cell.col = jS.cellLast.col
+                      s.socket.emit('message', { action:'cellEditDone', args:{cell: cell, user: s.socket.udata.user} });
+                    }
                     if (v != prevVal || forceCalc) {
                       jS.calc();
                     }
@@ -4049,6 +4052,12 @@ jQuery.sheet = {
           var last_td = jS.getTd(I,data.last_row,data.last_col);
           jQuery(last_td).css('background', '');
           jQuery(td).css('background', data.user.color);
+        },
+        cellEditDone: function(data){
+          var td = jS.getTd(I,data.cell.row,data.cell.col);
+          jS.createCell(I,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
+          if(data.cell.formula){jQuery(td).attr('formula',data.cell.formula);}
+          jS.calc();
         }
       }
     };
