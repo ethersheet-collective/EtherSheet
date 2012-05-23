@@ -10,19 +10,18 @@ var io = require('socket.io');
 var mysql = require('mysql');
 var path = require('path');
 var fs = require('fs');
+var config = require('./config');
 var Emitter = require('events').EventEmitter;
 var emitter = new Emitter();
 
 // constants
-var PORT = 8080
-
-var HTTPS_KEY = './lib/snakeoil.key';
-var HTTPS_CERT = './lib/snakeoil.crt';
-
-var MYSQL_DATABASE = 'ethersheet';
-var MYSQL_USER = 'ethersheet';
-var MYSQL_PASS = 'ethersheet';
-var MYSQL_HOST = 'localhost';
+var PORT = config.port;
+var HTTPS_KEY = config.https_key;
+var HTTPS_CERT = config.https_cert;
+var MYSQL_DATABASE = config.mysql_database;
+var MYSQL_USER = config.mysql_user;
+var MYSQL_PASS = config.mysql_password;
+var MYSQL_HOST = config.mysql_host;
 
 var sheets = {}
 /*************************************************
