@@ -1,0 +1,468 @@
+/* Controls styling */
+.jSheetControls_loc
+{
+	border-width: 0px ! important;
+	background: none ! important;
+	width: 35px;
+	text-align: right;
+}
+
+.jSheetControls_formula
+{
+	width: 99%;
+    height: 17px;
+}
+
+.jSheetControls_formulaParent 
+{
+	border: none ! important;
+}
+
+.jSheetControls, .jSheetControls table
+{
+	padding: 0px ! important;
+	border: none ! important;
+	width: 100%; 
+	margin: 0px;
+}
+
+/* Menu */
+.jSheetBarHelper {
+	position: absolute;
+	z-index: 99999;
+	font-size: .9em;
+	cursor: pointer;
+	right: .3em;
+	top: .2em;
+}
+.jSheetBarHelper *:hover
+{
+	background-color: inherit ! important;
+	-moz-border-radius-topleft: inherit;
+	-webkit-border-top-left-radius: inherit;
+	border-top-left-radius: inherit;
+	-moz-border-radius-topright: inherit;
+	-webkit-border-top-right-radius: inherit;
+	border-top-right-radius: inherit;
+}
+.jSheetMenu {
+	padding: 3px;
+	background: none;
+	border: none ! important;
+}
+.jSheetMenu *
+{
+	border-color: inherit ! important;
+	border-width: 1px;
+	text-decoration: none ! important;
+	white-space: nowrap;
+	width: auto;
+}
+
+.jSheetMenu ul
+{
+	cursor: pointer;
+	padding: 0px ! important;
+	margin: 0px ! important;
+	border: none ! important;
+	z-index: 999999;
+	position:relative;
+	margin:0;
+	padding:0;
+	list-style:none;
+	list-style-position:outside;
+}
+
+.jSheetMenu a
+{
+	display:block;
+	padding:0px 5px;
+}
+
+.jSheetMenu li
+{
+	float:left;
+	position:relative;
+	border: none;
+	background-image: none;
+	border-width: 1px;
+	width: inherit;
+}
+.jSheetMenu li:hover{
+	background-image: inherit;
+}
+
+.jSheetMenu ul ul {
+	position:absolute;
+	display:none;
+	width:12em;
+	top:1.5em;
+}
+
+.jSheetMenu li ul a{
+	width:12em;
+	height:auto;
+	float:left;
+}
+
+.jSheetMenu ul ul{
+	top:auto;
+}	
+
+.jSheetMenu li ul ul {
+	left:12em;
+	margin:0px 0 0 10px;
+}
+
+.jSheetMenu li:hover ul ul, .jSheetMenu li:hover ul ul ul, .jSheetMenu li:hover ul ul ul ul{
+	display:none;
+}
+.jSheetMenu li:hover ul, .jSheetMenu li li:hover ul, .jSheetMenu li li li:hover ul, .jSheetMenu li li li li:hover ul{
+	display:block;
+}
+
+.menu
+{
+	display: none;
+}
+#titleHolder
+{
+	padding-left: 10px;
+}
+.jSheetUI
+{
+	width: inherit ! important;
+	border-color: inherit ! important;
+}
+.jSheetTabContainer
+{
+	vertical-align: bottom;
+	text-align: left ! important;
+}
+.jSheetTabContainer span
+{
+	
+	padding: 2px 5px 0 5px ! important;
+	cursor: pointer;
+}
+.jSheetTabContainer *, .Div *
+{
+	font-size: 1em ! important;
+}
+
+.tableControl
+{
+	border-collapse: collapse ! important;
+	border: none ! important;
+	margin: none ! important;
+	padding: none ! important;
+	position: absolute ! important;
+}
+
+/* Sheet styling */
+.jSheet
+{
+	position: relative ! important;
+	margin-top: -1px ! important;
+	margin-left: -1px ! important;
+    table-layout: fixed;
+    empty-cells: show;
+	background-image: none ! important;
+	font-family: arial, serif;
+	overflow: hidden;
+	height: auto ! important;
+	border-spacing: 0px ! important;
+	border-width: 1px ! important;
+	margin-bottom: 20px ! important;
+	cursor: cell;
+}
+.jSheet tbody
+{
+	background-color: transparent;
+	color: inherit ! important;
+	border-color: inherit ! important;
+}
+
+.jSheet tr {
+	border-color: inherit ! important;
+	padding: 0px ! important;
+	border-style: solid ! important;
+	background-color: transparent;
+	-moz-border-radius: 0px 0px 0px 0px;
+	color:  inherit ! important;
+	border-width: 0px ! important;
+}
+.jSheet td, .jSheet th {
+	border-width: 1px ! important;
+	border-color: inherit;
+	padding: 0px ! important;
+	border-style: solid ! important;
+	-moz-border-radius: 0px 0px 0px 0px;
+	overflow: hidden;
+	text-overflow: ellipsis ! important;
+	white-space: nowrap ! important;
+	margin: 0px ! important;
+	padding: 0px ! important;
+	font-size: 1em;
+	height: inherit ! important;
+	color:  inherit;
+	position: relative;
+	min-width: 25px ! important;
+}
+.jSheetError {
+	text-align: left;
+	width: inherit ! important;
+	height: inherit ! important;
+	overflow: auto;
+	padding: 0px;
+	margin: 0px;
+}
+
+.jSheet colgroup col
+{
+	border: none ! important;
+}
+
+/* Containers styleing*/
+.jSheetBarCorner
+{
+	cursor: pointer;
+	border-width: 1px ! important;
+}
+
+.jSheetBarCornerParent
+{
+	border: none ! important;
+}
+
+.jSheetBarTopParent
+{
+    position: relative ! important;
+	background-image: none ! important;
+	vertical-align: middle;
+	overflow: hidden ! important;
+	cursor: pointer;
+	overflow: hidden ! important;
+}
+
+.jSheetBarLeftParent
+{
+    position: relative ! important;
+	background-image: none ! important;
+	vertical-align: middle;
+	overflow: hidden ! important;
+	cursor: pointer;
+	overflow: hidden ! important;
+}
+
+.sheetPane
+{
+	border: none ! important;
+}
+
+.jSheetEditPane
+{
+    overflow: auto ! important;
+	background-image: none ! important;
+	border-width: 0px;
+	position: relative ! important;
+}
+/* Bar item styling */
+
+.jSheetBarTop
+{
+    position: relative ! important;
+	border-width: 0px ! important;
+	min-width: 100000px;
+}
+.jSheetBarTopHandle
+{
+	top: 0em ! important;
+	cursor: move ! important;
+}
+
+.jSheetBarLeftHandle
+{
+	right: 0em ! important;
+	cursor: move ! important;
+}
+.jSheetBarLeft
+{
+	position: relative ! important;
+	border-width: 0px ! important;
+	min-height: 100000px;
+}
+.jSheetBarLeft span
+{
+	position: absolute;
+	top: 50%;
+	
+}
+
+.jSheetBarLeftTd
+{
+	border: none ! important;
+}
+
+.jSheetBarLeft > div
+{
+	text-align: center;
+	font-size: .8em;
+	height: inherit;
+	border-left: none ! important;
+	border-right: none ! important;
+	position: relative ! important;
+	vertical-align: middle ! important;
+	min-width: 14px ! important;
+	z-index; 999;
+	position: relative;
+}
+
+.jSheetBarTopTd
+{
+	border: none ! important;	
+	
+}
+
+.jSheetBarTop > div
+{
+	text-align: center ! important;
+	font-size: .8em;
+	float: left;
+	display:block;
+	height: inherit ! important;
+	padding-top: 2px;
+	overflow: hidden;
+	border-top: none ! important;
+	border-bottom: none ! important;
+	min-width: 25px ! important;
+	z-index; 999;
+	position: relative;
+}
+
+.jSheetControls img
+{
+	border: none;
+}
+
+.safeImg
+{
+	display: inline;
+	height: inherit ! important;
+	width: inherit ! important;
+}
+
+.jSheetInPlaceEdit
+{
+	position: absolute;
+}
+
+.colorPickers *
+{
+	display: inline-block;
+	width: 16px ! important;
+	height: 16px ! important;
+	background-color: transparent ! important;
+}
+
+.jSheetFullScreen
+{
+	top: 5px;
+	left: 5px;
+	position: fixed;
+	top: expression(eval(document.body.scrollTop + 15) + "px");
+	left: expression(eval(document.body.scrollLeft) + "px");
+	z-index: 9999;
+}
+
+.jSheetFullScreenTabContainer
+{
+	bottom: 10px;
+	left: 10px;
+	position: fixed;
+	top: expression(eval(document.body.scrollTop + 15) + "px");
+	left: expression(eval(document.body.scrollLeft) + "px");
+}
+
+.jSheetAutoFiller
+{
+	position: absolute;
+	height: 8px;
+	width: 8px;
+	top: 0px;
+	left: 0px;
+	cursor: crosshair ! important;
+	display: none;
+}
+
+.jSheetTitle, .jSheetInlineMenu
+{
+	width: auto;
+	text-align: center;
+	border: none ! important;
+}
+
+.jSheetChart
+{
+	width: inherit;
+	height: inherit;
+}
+
+.bodyNoScroll
+{
+	overflow: hidden ! important;
+}
+
+.jSheetParent, .jSheetParent div
+{
+	padding: 0px ! important;
+}
+
+/* Cell styler classes */
+.styleBold
+{ font-weight: bold; }
+.styleItalics	
+{ font-style: italic; }
+.styleUnderline	
+{ text-decoration: underline; }
+.styleLineThrough
+{ text-decoration: line-through;}
+.styleLeft		
+{ text-align: left; }
+.styleRight		
+{ text-align: right; }
+.styleCenter	
+{ text-align: center; }
+.styleTop		
+{ vertical-align: top; }
+.styleMiddle	
+{ vertical-align: middle; }
+.styleBottom	
+{ vertical-align: bottom; }
+.styleUpper 		
+{ text-transform: uppercase; }
+.styleCapital 	
+{ text-transform: capitalize; }
+.styleLower 		
+{ text-transform: lowercase; }
+.styleHidden 	
+{ display: none; }
+.styleWrap
+{ word-wrap: break-word; }
+#user-menu-container{
+  height: 30px;
+  width: 30px;
+  border: 1px solid #ccc;
+  float: right;
+  top: -15px;
+  position: relative;
+}
+#user-count{
+  font-size: 12px;
+  font-color: #eee;
+  text-align: center;
+  margin: auto;
+  width: 15px;
+  margin-top: 6px;
+}
+

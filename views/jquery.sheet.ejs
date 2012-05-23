@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Expires" CONTENT="-1">
+        <title>Ethersheet </title>
+        <!--Required-->
+        <link rel="stylesheet" type="text/css" href="/jquery.sheet.css" />
+        <link rel="stylesheet" type="text/css" href="/jquery-ui/theme/jquery-ui.css" />
+        <script type="text/javascript" src="/jquery-1.5.2.js">
+        </script>
+        <script type="text/javascript" src="/jquery.sheet.js">
+        </script>
+        <script type="text/javascript" src="/parser.js">
+        </script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="/doc.cookie.js"></script>
+        <!--/Required-->
+		
+		<!--Optional-->
+			<!--ScrollTo-->
+				<script type="text/javascript" src="/plugins/jquery.scrollTo-min.js"></script>
+			<!--/ScrollTo-->
+			<!--jQuery UI-->
+				<script type="text/javascript" src="/jquery-ui/ui/jquery-ui.min.js"></script>
+			<!--/jQuery UI-->
+			<!--Raphaeljs - for charts-->
+				<script type="text/javascript" src="/plugins/raphael-min.js"></script>
+				<script type="text/javascript" src="/plugins/g.raphael-min.js"></script>
+			<!--/Raphaeljs-->
+			<!--ColorPicker-->
+				<link rel="stylesheet" type="text/css" href="/plugins/jquery.colorPicker.css" />
+				<script type="text/javascript" src="/plugins/jquery.colorPicker.min.js"></script>
+			<!--/ColorPicker-->
+			<!--Theme Switcher Tool-->
+				<!--<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>-->
+			<!--/Theme Switcher Tool-->
+			<!--Elastic-->
+				<script type="text/javascript" src="/plugins/jquery.elastic.min.js"></script>
+			<!--/Elastic-->
+			<!--Advanced_Math-->
+				<script type="text/javascript" src="/jquery.sheet.advancedfn.js"></script>
+			<!--/Advanced_Math-->
+			<!--Finance-->
+				<script type="text/javascript" src="/jquery.sheet.financefn.js"></script>
+			<!--/Finance-->
+		<!--/Optional-->
+        <script type="text/javascript">
+            $(function(){
+                if(!docCookies.hasItem('user_id')){
+                  docCookies.setItem('user_id', randomString(20));
+                }
+                //Here is where we initiate the sheets
+                //every time sheet is created it creates a new jQuery.sheet.instance (array), to manipulate each sheet, the jQuery object is returned
+              $.getJSON('/s/<%=sheet_title%>.json', function(data) {
+                var sheet_title = "<%= sheet_title %>";
+                var socket = io.connect('https://localhost');
+
+                socket.on('connect', function() {
+                  console.log('connected');
+                  socket.emit('JOIN_ROOM', { sheet_id: '<%= sheet_title %>', user_id: docCookies.getItem('user_id') });
+                });
+
+                socket.on('USER_CHANGE', function(data){
+                  update_usermenu(data.sheet_data);
+                  socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
+                  console.log('a user has ' + data.action + ' with id: ' + data.user.token);
+                });
+
+                $('#jQuerySheet0').sheet({
+                  title: sheet_title,
+                  socket: socket,
+                  inlineMenu: inlineMenu($.sheet.instance),
+                  buildSheet: $.sheet.makeTable.json(data),
+                  fnSave: function(){
+                    $('#jSheetTitle_0').css('background','#f00');
+                    $.post('/save', 
+                          {sheet_id: sheet_title, sheet_data: JSON.stringify($.sheet.instance[0].exportSheet.json())},
+                          function(data){
+                            $('#jSheetTitle_0').css('background','none');
+                          }
+                    );
+                  },
+                  autoFiller: true
+                });
+              });
+				
+                
+                //examples of how to use jQuery.sheet
+                /*
+                 //Inline sheet(s), non-editable (like a gridview)
+                 $('.jQuerySheet').sheet({
+                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
+                 buildSheet: true, //will turn object #jQuerySheet's child tables into sheets
+                 editable: false,
+                 calcOff: true
+                 });
+                 
+                 //New single custom sized sheet
+                 $('#jQuerySheet').sheet({
+                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
+                 inlineMenu: inlineMenu(jQuery.sheet.instance),
+                 buildSheet: '5x100'
+                 });
+                 
+                 //Custom object sheet(s)
+                 $('#jQuerySheet').sheet({
+                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
+                 inlineMenu: inlineMenu(jQuery.sheet.instance),
+                 buildSheet: $('#jQuerySheet').find('table')
+                 });
+                 
+                 //Custom object sheet(s)
+                 $('#jQuerySheet').sheet({
+                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
+                 inlineMenu: inlineMenu(jQuery.sheet.instance),
+                 buildSheet: $.sheet.makeTable.fromSize('5x100').add($.sheet.makeTable.fromSize('5x100'))
+                 });
+                 */
+                //This is to give a themeswitcher on the page
+                //$('#themeSwitcher').themeswitcher();
+                
+                //This is for some fancy menu stuff
+                var o = $('#structures');
+                var top = o.offset().top - 300;
+                $(document).scroll(function(e){
+                    if ($(this).scrollTop() > top) {
+                        $('#lockedMenu').removeClass('locked');
+                    }
+                    else {
+                        $('#lockedMenu').addClass('locked');
+                    }
+                }).scroll();
+            });
+            
+            //This function builds the inline menu to make it easy to interact with each sheet instance
+            function inlineMenu(I){
+                I = (I ? I.length : 0);
+                
+                //we want to be able to edit the html for the menu to make them multi-instance
+                var html = $('#inlineMenu').html().replace(/sheetInstance/g, "$.sheet.instance[" + I + "]");
+                
+                var menu = $(html);
+                
+                //The following is just so you get an idea of how to style cells
+                menu.find('.colorPickerCell').colorPicker().change(function(){
+                    $.sheet.instance[I].cellChangeStyle('background-color', $(this).val());
+                });
+                
+                menu.find('.colorPickerFont').colorPicker().change(function(){
+                    $.sheet.instance[I].cellChangeStyle('color', $(this).val());
+                });
+                
+                menu.find('.colorPickers').children().eq(1).css('background-image', "url('/images/palette.png')");
+                menu.find('.colorPickers').children().eq(3).css('background-image', "url('/images/palette_bg.png')");
+                
+                
+                return menu;
+            }
+            
+            function goToObj(s){
+                $('html, body').animate({
+                    scrollTop: $(s).offset().top
+                }, 'slow');
+                return false;
+            }
+        </script>
+        <!--Page styles-->
+        <style>
+            body {
+                background-color: #464646;
+                padding: 0px;
+                margin: 0px;
+                padding-bottom: 100px;
+                color: black;
+                font-family: sans-serif;
+                font-size: 13px;
+            }
+            
+            .wrapper {
+                margin: 10px;
+                background-color: #CCCCCC;
+            }
+            
+            .locked {
+                position: fixed;
+                top: expression(eval(document.body.scrollTop) + "px");
+                left:
+                20px;
+                z-index:
+                100;
+            }
+            
+			#lockedMenu * {
+				font-size: .85em ! important;
+			}
+			
+            #structures {
+                text-align: left;
+                font-size: 1.5em;
+                padding: 10px;
+                border: none;
+            }
+            
+            #header {
+                text-align: left;
+                font-size: 1.5em;
+                padding: 18px;
+                border: none;
+                padding-left: 150px;
+            }
+            
+            #footer {
+                text-align: center;
+                color: white;
+                font-size: .9em;
+            }
+            
+            #footer a {
+                font-size: 1.2em;
+                color: #FFFFFF;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="header" class="ui-state-default">
+          <div id='user-menu-container'>
+            <div id='user-count'>1</span>
+          </div>
+        </h1>
+        <div id="mainWrapper" class="ui-corner-all wrapper">
+            <div id="jQuerySheet0" class="jQuerySheet" style="height: 450px;">
+            </div>
+        </div>
+        <span id="inlineMenu" style="display: none;">
+			<span>
+				<a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected">
+					<img alt="Insert Row After Selected" src="/images/sheet_row_add.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addRow(null, true); return false;" title="Insert Row Before Selected">
+					<img alt="Insert Row Before Selected" src="/images/sheet_row_add.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addRow(null, null, ':last'); return false;" title="Add Row At End">
+					<img alt="Add Row" src="/images/sheet_row_add.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addRowMulti(); return false;" title="Add Multi-Rows">
+					<img alt="Add Multi-Rows" src="/images/sheet_row_add_multi.png"/></a>
+				<a href="#" onclick="sheetInstance.deleteRow(); return false;" title="Delete Row">
+					<img alt="Delete Row" src="/images/sheet_row_delete.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Insert Column After Selected">
+					<img alt="Insert Column After Selected" src="/images/sheet_col_add.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addColumn(null, true); return false;" title="Insert Column Before Selected">
+					<img alt="Insert Column Before Selected" src="/images/sheet_col_add.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addColumn(null, null, ':last'); return false;" title="Add Column At End">
+					<img alt="Add Column At End" src="/images/sheet_col_add.png"/></a>
+				<a href="#" onclick="sheetInstance.controlFactory.addColumnMulti(); return false;" title="Insert Multi-Columns">
+					<img alt="Add Multi-Columns" src="/images/sheet_col_add_multi.png"/></a>
+				<a href="#" onclick="sheetInstance.deleteColumn(); return false;" title="Delete Column">
+					<img alt="Delete Column" src="/images/sheet_col_delete.png"/></a>
+				<a href="#" onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val()); return false;" title="Get Cell Range">
+					<img alt="Get Cell Range" src="/images/sheet_get_range.png"/></a>
+				<a href="#" onclick="sheetInstance.s.fnSave(); return false;" title="Save Sheets">
+					<img alt="Save Sheet" src="/images/disk.png"/></a>
+				<a href="#" onclick="sheetInstance.deleteSheet(); return false;" title="Delete Current Sheet">
+					<img alt="Delete Current Sheet" src="/images/table_delete.png"/></a>
+				<a href="#" onclick="sheetInstance.calc(sheetInstance.i); return false;" title="Refresh Calculations">
+					<img alt="Refresh Calculations" src="/images/arrow_refresh.png"/></a>
+				<a href="#" onclick="sheetInstance.cellFind(); return false;" title="Find">
+					<img alt="Find" src="/images/find.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleBold'); return false;" title="Bold">
+					<img alt="Bold" src="/images/text_bold.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleItalics'); return false;" title="Italic">
+					<img alt="Italic" src="/images/text_italic.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleUnderline', 'styleLineThrough'); return false;" title="Underline">
+					<img alt="Underline" src="/images/text_underline.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleLineThrough', 'styleUnderline'); return false;" title="Strikethrough">
+					<img alt="Strikethrough" src="/images/text_strikethrough.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleLeft', 'styleCenter styleRight'); return false;" title="Align Left">
+					<img alt="Align Left" src="/images/text_align_left.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleCenter', 'styleLeft styleRight'); return false;" title="Align Center">
+					<img alt="Align Center" src="/images/text_align_center.png"/></a>
+				<a href="#" onclick="sheetInstance.cellStyleToggle('styleRight', 'styleLeft styleCenter'); return false;" title="Align Right">
+					<img alt="Align Right" src="/images/text_align_right.png"/></a>
+				<a href="#" onclick="sheetInstance.fillUpOrDown(); return false;" title="Fill Down">
+					<img alt="Fill Down" src="/images/arrow_down.png"/></a>
+				<a href="#" onclick="sheetInstance.fillUpOrDown(true); return false;" title="Fill Up">
+					<img alt="Fill Up" src="/images/arrow_up.png"/></a>
+				<span class="colorPickers">
+					<input title="Foreground color" class="colorPickerFont" style="background-image: url('images/palette.png') ! important; width: 16px; height: 16px;"/>
+					<input title="Background Color" class="colorPickerCell" style="background-image: url('images/palette_bg.png') ! important; width: 16px; height: 16px;"/>
+				</span>
+				<a href="#" onclick="sheetInstance.obj.formula().val('=HYPERLINK(\'' + prompt('Enter Web Address', 'http://www.visop-dev.com/') + '\')').keydown(); return false;" title="HyperLink">
+					<img alt="Web Link" src="/images/page_link.png"/></a>
+				<a href="#" onclick="sheetInstance.toggleFullScreen(); $('#lockedMenu').toggle(); return false;" title="Toggle Full Screen">
+					<img alt="Web Link" src="/images/arrow_out.png"/></a><!--<a href="#" onclick="insertAt('jSheetControls_formula', '~np~text~'+'/np~');return false;" title="Non-parsed"><img alt="Non-parsed" src="/images/noparse.png"/></a>-->
+			</span>
+		</span>
+        <div id="footer" class="ui-corner-all">
+        </div>
+    </body>
+</html>
