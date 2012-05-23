@@ -28,7 +28,7 @@ var sheets = {}
  * bootstrap https connetctions and mysql connections
  *************************************************/
 
-// PLEASE PLEASE PLEASE deploy this for production with the self
+// PLEASE PLEASE PLEASE do not deploy this for production with the self
 // signed cert.  It would be a REALLY BAD IDEA
 var httpsopts = {
   key: fs.readFileSync(HTTPS_KEY),
@@ -114,7 +114,7 @@ io.sockets.on('connection', function(socket){
 /***********************************************
  * Fire the canons!!
  ***********************************************/
-app.listen(PORT, function(){
+app.listen(PORT, "127.0.0.1", function(){
   console.log('ethersheet is listening over https on port ' + PORT);
 });
 
