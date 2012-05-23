@@ -1,0 +1,25 @@
+{
+  "author": "cooperq",
+  "name": "ethersheet",
+  "description": "Open Source, Online Spreadsheet Collaboration",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cooperq/EtherSheet.git"
+  },
+  "engines": {
+    "node": ">=0.6"
+  },
+  "dependencies": {
+    "express": ">=2.5.9",
+    "ejs": ">=0.7.1",
+    "jison": ">=0.3.2",
+    "mysql": ">=0.9.5",
+    "socket.io": ">=0.9.5"
+  },
+  "main" : "ethersheet",
+  "directories" : { 
+    "lib" : "./lib",
+  },
+  "devDependencies": {}
+}

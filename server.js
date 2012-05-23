@@ -16,11 +16,10 @@ var emitter = new Emitter();
 // constants
 var PORT = 8080
 
-var HTTPS_KEY = './snakeoil.key';
-var HTTPS_CERT = './snakeoil.crt';
+var HTTPS_KEY = './lib/snakeoil.key';
+var HTTPS_CERT = './lib/snakeoil.crt';
 
 var MYSQL_DATABASE = 'ethersheet';
-var MYSQL_TABLE = 'sheets';
 var MYSQL_USER = 'ethersheet';
 var MYSQL_PASS = 'ethersheet';
 var MYSQL_HOST = 'localhost';
