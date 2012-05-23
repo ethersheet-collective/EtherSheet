@@ -64,7 +64,7 @@
                 socket.on('USER_CHANGE', function(data){
                   update_usermenu(data.sheet_data);
                   socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
-                  console.log('a user has ' + data.action + ' with id: ' + data.user_id);
+                  console.log('a user has ' + data.action + ' with id: ' + data.user.token);
                 });
 
                 $('#jQuerySheet0').sheet({

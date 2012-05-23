@@ -2673,7 +2673,7 @@ jQuery.sheet = {
                                       */
                                       //socket
         if(s.socket){
-          s.socket.emit('message', {action: 'cell_active', args:loc });
+          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata.user, last_row: jS.rowLast, last_col: jS.colLast } });
         }
         if (typeof(loc.col) != 'undefined') {
           jS.cellLast.td = td; //save the current cell/td
@@ -4045,10 +4045,10 @@ jQuery.sheet = {
 
       jSS: {
         cell_active: function(data){
-          console.log('cell active!');
-          var td = jS.getTd(I,data.row,data.col);
-          console.log(s.socket);
-          jQuery(td).css('background', 'black');
+          var td = jS.getTd(I,data.loc.row,data.loc.col);
+          var last_td = jS.getTd(I,data.last_row,data.last_col);
+          jQuery(last_td).css('background', '');
+          jQuery(td).css('background', data.user.color);
         }
       }
     };

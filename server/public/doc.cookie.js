@@ -51,5 +51,5 @@ function randomString(length)
 
 function update_usermenu(sheet_data){
   $('#user-count').html(sheet_data.count); 
-  $('#user-menu-container').css('background-color', sheet_data.users[docCookies.getItem('user_id')].color);
+  $('#user-menu-container').css('background-color', sheet_data.users[docCookies.getItem('user_id')].user.color);
 };

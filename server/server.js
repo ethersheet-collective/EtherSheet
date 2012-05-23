@@ -89,8 +89,13 @@ app.get('/s/:sheetid', function(req,res){
 io.sockets.on('connection', function(socket){
 
   socket.on('JOIN_ROOM', function(data){
-    es.add_user_to_room(socket, data.user_id, data.sheet_id) 
-    io.sockets.in(data.sheet_id).emit('USER_CHANGE', {user_id: data.user_id, action: 'JOINED', sheet_data:sheets[data.sheet_id]});
+    es.find_or_create_user(data.user_id, function(user){ 
+      es.add_user_to_room(socket, user, data.sheet_id) 
+      io.sockets.in(data.sheet_id).emit(
+        'USER_CHANGE', 
+        {user: user, action: 'JOINED', sheet_data:sheets[data.sheet_id]}
+      );
+    });
   });
   
   //use this for messages that are passed only to other clients
@@ -118,21 +123,43 @@ app.listen(PORT, function(){
 /***********************************************
  * utitilty functions
  ***********************************************/
-es.add_user_to_room = function(socket, user_id, sheet_id){
+es.find_or_create_user = function(user_id, callback){
+  es.sql.query('SELECT * FROM users WHERE token = ?', 
+    [user_id], 
+    function selectCb(err, results, fields) {
+      if(err) {
+        throw err;
+      }
+      if(results.length > 0){ //  user exists
+        callback(results[0]);
+      } else {
+        es.sql.query('INSERT INTO users (token, color) VALUES (?, ?)',
+          [user_id, es.get_color()],
+          function selectCb(err, results, fields){
+            if(err) {
+              throw err;
+            } else {
+              callback(results[0]);
+            }
+          }
+        );
+      }
+    }
+  );
+}
+es.add_user_to_room = function(socket, user, sheet_id){
   sheets[sheet_id] = sheets[sheet_id] || {count:0, users:{}};
   sheets[sheet_id].count++;
   socket.udata = {};
   console.log(socket.udata);
-  socket.udata.user_id = user_id;
+  socket.udata.user = user;
   socket.udata.sheet_id = sheet_id;
-  socket.udata.nickname = '';
-  socket.udata.color = es.get_color(sheets[sheet_id].count);
-  sheets[sheet_id].users[user_id] = socket.udata;
-  console.log('user ' + socket.user_id + ' joined room ' + socket.sheet_id);
+  sheets[sheet_id].users[user.token] = socket.udata;
+  console.log('user ' + socket.udata.user.token + ' joined room ' + socket.udata.sheet_id);
   socket.join(sheet_id);
 };
 
-es.get_color = function(count){
+es.get_color = function(){
   var colors = [
     '#1BA5E0',
     '#0EF012',
