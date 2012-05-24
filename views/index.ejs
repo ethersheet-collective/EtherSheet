@@ -2,22 +2,30 @@
   <head>
     <title>Ethersheet</title>
     <script type="text/javascript" src="/doc.cookie.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Averia+Libre' rel='stylesheet' type='text/css'>
+    <link href='/style.css' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <div id='content-outer'>
       <div id='content-inner'>
-        <h1> Ethersheet - Collaborative spreadsheets </h1>
+        <h1 id='title'> Ethersheet </h1>
+        <p id='instructions' class='text'>
+          Ethersheet is a free and open source software tool to make collaborating on spreadsheets fast and easy.
+          <br />
+          <br />
+          <br />
+        </p>
+        <p id='instructions' class='text'>
+          Open or create a sheet with the following name:
+        </p>
         <form onsubmit="go2Name();return false;" action="#"> 
-          <div id="input_border">
+          <div id="input_border" class='text'>
             <input type="text" autofocus="" id="sheetname"> 
-            <input type="submit" value="OK"> 
+            <input type="submit" value="GO" id='submit'> 
           </div>
         </form>
-        <p id='about'>
-          Ethersheet is a software libre service provided by <a href='http://radicaldesigns.org'>radicalDesigns</a>,
-          a radical technology company.  Ethersheet allows for real-time group collaboration of spreadsheet documents. 
-          radicalDesigns does not store IP addresses for this service, and we require https. You can also use TOR to 
-          access this service for added security.
+        <p id='about' class='text'>
+        If you want to find out more, report bugs, or contirbute code, visit the <a href='https://github.com/cooperq/EtherSheet'>Github Page</a>. 
         </p>
       </div>
     </div>
