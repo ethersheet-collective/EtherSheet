@@ -51,7 +51,7 @@
                 //every time sheet is created it creates a new jQuery.sheet.instance (array), to manipulate each sheet, the jQuery object is returned
               $.getJSON('/s/<%=sheet_title%>.json', function(data) {
                 var sheet_title = "<%= sheet_title %>";
-                var socket = io.connect('https://' + location.hostname);
+                var socket = io.connect('https://' + location.hostname + ":<%= socket_port %>");
 
                 socket.on('connect', function() {
                   console.log('connected');

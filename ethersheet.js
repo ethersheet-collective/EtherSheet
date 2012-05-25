@@ -16,6 +16,7 @@ var emitter = new Emitter();
 
 // constants
 var PORT = config.port;
+var HOST = config.server_host;
 var HTTPS_KEY = config.https_key;
 var HTTPS_CERT = config.https_cert;
 var MYSQL_DATABASE = config.mysql_database;
@@ -78,7 +79,7 @@ app.get('/s/:sheetid.json', function(req,res){
 
 // sheet entry page
 app.get('/s/:sheetid', function(req,res){
-  res.render('jquery.sheet.ejs', {sheet_title: req.params.sheetid});
+  res.render('jquery.sheet.ejs', {sheet_title: req.params.sheetid, socket_port: PORT});
 });
 
 /***********************************************
@@ -117,7 +118,7 @@ io.sockets.on('connection', function(socket){
 /***********************************************
  * Fire the canons!!
  ***********************************************/
-app.listen(PORT, "127.0.0.1", function(){
+app.listen(PORT, HOST, function(){
   console.log('ethersheet is listening over https on port ' + PORT);
 });
 
