@@ -43,8 +43,8 @@ app.post('/save', function(req,res){
 
 //get the sheet in json form
 app.get('/s/:sheetid.json', function(req,res){
-  es.find_or_create_sheet(req.params.sheetid, function(){
-    res.send(es.sheet_data.sheetdata);
+  es.find_or_create_sheet(req.params.sheetid, function(sheet){
+    res.send(sheet.sheetdata);
   });
 });
 
@@ -68,12 +68,14 @@ io.sockets.on('connection', function(socket){
       socket.udata = user;
       socket.udata.user_id = data.user_id;
       socket.udata.sheet_id = data.sheet_id;
-      es.add_user_to_room(socket.udata);
-      socket.emit('ROOM_JOINED');
-      io.sockets.in(data.sheet_id).emit(
-        'USER_CHANGE', 
-        {user: user, action: 'JOINED', sheet_data:es._sheets[data.sheet_id]}
-      );
+      es.add_user_to_room(socket.udata, data.sheet_id, function(){
+        socket.join(data.sheet_id);
+        socket.emit('ROOM_JOINED');
+        io.sockets.in(data.sheet_id).emit(
+          'USER_CHANGE', 
+          {user: user, action: 'JOINED', sheet_data:EtherSheetService.sheets[data.sheet_id]}
+        );
+      });
     });
   });
   
@@ -85,9 +87,9 @@ io.sockets.on('connection', function(socket){
 
   socket.on('disconnect', function(){
     socket.leave(socket.udata.sheet_id);
-    es.remove_user_from_room(udata);
+    es.remove_user_from_room(socket.udata);
     console.log('user ' + socket.udata.user_id + ' LEFT room ' + socket.udata.sheet_id);
-    io.sockets.in(socket.udata.sheet_id).emit('USER_CHANGE', {user_id: socket.udata.user_id, action: 'LEFT', sheet_data:es._sheets[socket.udata.sheet_id]});
+    io.sockets.in(socket.udata.sheet_id).emit('USER_CHANGE', {user_id: socket.udata.user_id, action: 'LEFT', sheet_data:EtherSheetService.sheets[socket.udata.sheet_id]});
   });
 
 });

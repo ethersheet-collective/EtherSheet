@@ -2676,7 +2676,7 @@ jQuery.sheet = {
                                       */
                                       //socket
         if(s.socket){
-          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata.user, last_row: jS.rowLast, last_col: jS.colLast } });
+          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata, last_row: jS.rowLast, last_col: jS.colLast } });
         }
         if (typeof(loc.col) != 'undefined') {
           jS.cellLast.td = td; //save the current cell/td

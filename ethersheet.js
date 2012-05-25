@@ -16,7 +16,7 @@ util.inherits(EtherSheetService, events.EventEmitter);
 // Bootstrap MySQL
 EtherSheetService.sql = mysql.createClient({
   user: config.mysql_user,
-  password: config.mysql_pass,
+  password: config.mysql_password,
   host: config.mysql_host,
   database: config.mysql_database
 });
@@ -48,7 +48,7 @@ EtherSheetService.prototype.find_or_create_user = function(user_id, callback){
       } else {
         EtherSheetService.sql.query(
           'INSERT INTO users (token, color) VALUES (?, ?)',
-          [user_id, this.get_color()],
+          [user_id, es.get_color()],
           function(err, results, fields){
             if(err) {
               throw err;
@@ -62,12 +62,12 @@ EtherSheetService.prototype.find_or_create_user = function(user_id, callback){
   );
 }
 
-EtherSheetService.prototype.add_user_to_room = function(user){
+EtherSheetService.prototype.add_user_to_room = function(user, sheet_id, cb){
   EtherSheetService.sheets[sheet_id] = EtherSheetService.sheets[sheet_id] || {count:0, users:{}};
   EtherSheetService.sheets[sheet_id].count++;
-  EtherSheetService.sheets[sheet_id].users[user.token] = socket.udata;
-  console.log('user ' + user.token + ' joined room ' + socket.udata.sheet_id);
-  socket.join(sheet_id);
+  EtherSheetService.sheets[sheet_id].users[user.user_id] = user;
+  console.log('user ' + user.token + ' joined room ' + sheet_id);
+  cb(null);
 };
 
 EtherSheetService.prototype.remove_user_from_room = function(user){
@@ -103,16 +103,16 @@ EtherSheetService.prototype.find_or_create_sheet = function(sheet_id,cb){
       if(results.length > 0){ // a sheet exists
         //load the data and emit an event
         EtherSheetService.sheet_data = results[0];
-        cb();
+        cb(results[0]);
       } else {
         //create a new sheet
-        EtherSheetService.create_sheet(sheet_id,cb);
+        es.create_sheet(sheet_id,cb);
       }
     }
   );
 };
 
-EtherSheetService.prototype.create_sheet = function(sheet_id.cb){
+EtherSheetService.prototype.create_sheet = function(sheet_id,cb){
   var es = this;
   EtherSheetService.sql.query(
     'INSERT INTO sheets VALUES (?, ?)',
@@ -122,7 +122,7 @@ EtherSheetService.prototype.create_sheet = function(sheet_id.cb){
         throw err;
       }
       EtherSheetService.sheet_data = {sheetid: sheet_id, sheetdata: EtherSheetService.default_sheetdata} ;
-      cb();
+      cb(EtherSheetService.sheet_data);
     }
   );
 }; 
