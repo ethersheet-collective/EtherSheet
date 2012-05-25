@@ -91,7 +91,7 @@ EtherSheetService.prototype.save_sheet = function(sheet_id, sheet_data){
   );
 };
 
-EtherSheetService.prototype.find_or_create_sheet = function(sheet_id){
+EtherSheetService.prototype.find_or_create_sheet = function(sheet_id,cb){
   var es = this;
   EtherSheetService.sql.query(
     'SELECT * FROM sheets WHERE sheetid = ?', 
@@ -103,16 +103,16 @@ EtherSheetService.prototype.find_or_create_sheet = function(sheet_id){
       if(results.length > 0){ // a sheet exists
         //load the data and emit an event
         EtherSheetService.sheet_data = results[0];
-        es.emit('sheet_ready');
+        cb();
       } else {
         //create a new sheet
-        EtherSheetService.create_sheet(sheet_id);
+        EtherSheetService.create_sheet(sheet_id,cb);
       }
     }
   );
 };
 
-EtherSheetService.prototype.create_sheet = function(sheet_id){
+EtherSheetService.prototype.create_sheet = function(sheet_id.cb){
   var es = this;
   EtherSheetService.sql.query(
     'INSERT INTO sheets VALUES (?, ?)',
@@ -122,7 +122,7 @@ EtherSheetService.prototype.create_sheet = function(sheet_id){
         throw err;
       }
       EtherSheetService.sheet_data = {sheetid: sheet_id, sheetdata: EtherSheetService.default_sheetdata} ;
-      es.emit('sheet_ready');
+      cb();
     }
   );
 }; 

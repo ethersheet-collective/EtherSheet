@@ -43,8 +43,7 @@ app.post('/save', function(req,res){
 
 //get the sheet in json form
 app.get('/s/:sheetid.json', function(req,res){
-  es.find_or_create_sheet(req.params.sheetid);
-  es.on('sheet_ready', function(){
+  es.find_or_create_sheet(req.params.sheetid, function(){
     res.send(es.sheet_data.sheetdata);
   });
 });
