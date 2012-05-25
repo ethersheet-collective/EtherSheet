@@ -54,11 +54,19 @@
                 var socket = io.connect('https://' + location.hostname + ":<%= socket_port %>");
 
                 socket.on('connect', function() {
+                  $('#disconnect-message').hide();
                   console.log('connected');
                   if(!docCookies.hasItem('user_id')){
                     docCookies.setItem('user_id', randomString(20));
                   }
                   socket.emit('JOIN_ROOM', { sheet_id: '<%= sheet_title %>', user_id: docCookies.getItem('user_id') });
+                });
+                
+                socket.on('disconnect', function() {
+                  $('#disconnect-message').show();
+                  window.setInterval(function(){
+                    var socket = io.connect('https://' + location.hostname + ":<%= socket_port %>");
+                  }, 1000);
                 });
 
                 socket.on('USER_CHANGE', function(data){
@@ -72,6 +80,7 @@
                     socket: socket,
                     inlineMenu: inlineMenu($.sheet.instance),
                     buildSheet: $.sheet.makeTable.json(data),
+                    height: window.innerHeight - 100,
                     fnSave: function(){
                       $('#jSheetTitle_0').css('background','#f00');
                       $.post('/save', 
@@ -169,10 +178,9 @@
         <!--Page styles-->
         <style>
             body {
-                background-color: #464646;
+                background-color: #ccc;
                 padding: 0px;
                 margin: 0px;
-                padding-bottom: 100px;
                 color: black;
                 font-family: sans-serif;
                 font-size: 13px;
@@ -224,13 +232,20 @@
         </style>
     </head>
     <body>
+        <div id='disconnect-message'>
+          <div id='disconnect-text'>
+            You have been disconnected from the server, attempting to reconnect...
+            <br />
+            <img src="/ajax-loader.gif" alt='' />
+          </div>
+        </div>
         <h1 id="header" class="ui-state-default">
           <div id='user-menu-container'>
             <div id='user-count'>1</span>
           </div>
         </h1>
         <div id="mainWrapper" class="ui-corner-all wrapper">
-            <div id="jQuerySheet0" class="jQuerySheet" style="height: 450px;">
+            <div id="jQuerySheet0" class="jQuerySheet" style="height: 100%;">
               <div id='loading-text'>
                 Loading...
                 <br />
