@@ -102,7 +102,6 @@ EtherSheetService.prototype.find_or_create_sheet = function(sheet_id,cb){
       }
       if(results.length > 0){ // a sheet exists
         //load the data and emit an event
-        EtherSheetService.sheet_data = results[0];
         cb(results[0]);
       } else {
         //create a new sheet
@@ -121,8 +120,7 @@ EtherSheetService.prototype.create_sheet = function(sheet_id,cb){
       if(err) {
         throw err;
       }
-      EtherSheetService.sheet_data = {sheetid: sheet_id, sheetdata: EtherSheetService.default_sheetdata} ;
-      cb(EtherSheetService.sheet_data);
+      cb({sheetid: sheet_id, sheetdata: EtherSheetService.default_sheetdata});
     }
   );
 }; 

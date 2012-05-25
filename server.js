@@ -82,7 +82,7 @@ io.sockets.on('connection', function(socket){
   //use this for messages that are passed only to other clients
   //and don't need to interact with the server.
   socket.on('message', function(data){
-    socket.broadcast.to(socket.sheet_id).emit('message', data);
+    socket.broadcast.to(socket.udata.sheet_id).emit('message', data);
   });
 
   socket.on('disconnect', function(){
