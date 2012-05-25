@@ -465,4 +465,9 @@
   width: 15px;
   margin-top: 6px;
 }
-
+#loading-text{
+  font-size: 24px;
+  width: 200px;
+  margin: 0 auto;
+  text-align: center;
+}

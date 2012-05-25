@@ -66,22 +66,23 @@
                   socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
                   console.log('a user has ' + data.action + ' with id: ' + data.user.token);
                 });
-
-                $('#jQuerySheet0').sheet({
-                  title: sheet_title,
-                  socket: socket,
-                  inlineMenu: inlineMenu($.sheet.instance),
-                  buildSheet: $.sheet.makeTable.json(data),
-                  fnSave: function(){
-                    $('#jSheetTitle_0').css('background','#f00');
-                    $.post('/save', 
-                          {sheet_id: sheet_title, sheet_data: JSON.stringify($.sheet.instance[0].exportSheet.json())},
+                socket.on('ROOM_JOINED', function(){
+                  $('#jQuerySheet0').sheet({
+                    title: sheet_title,
+                    socket: socket,
+                    inlineMenu: inlineMenu($.sheet.instance),
+                    buildSheet: $.sheet.makeTable.json(data),
+                    fnSave: function(){
+                      $('#jSheetTitle_0').css('background','#f00');
+                      $.post('/save', 
+                            {sheet_id: sheet_title, sheet_data: JSON.stringify($.sheet.instance[0].exportSheet.json())},
                           function(data){
                             $('#jSheetTitle_0').css('background','none');
                           }
-                    );
-                  },
-                  autoFiller: true
+                      );
+                    },
+                    autoFiller: true
+                  });
                 });
               });
 				
@@ -230,6 +231,11 @@
         </h1>
         <div id="mainWrapper" class="ui-corner-all wrapper">
             <div id="jQuerySheet0" class="jQuerySheet" style="height: 450px;">
+              <div id='loading-text'>
+                Loading...
+                <br />
+                <img src="/ajax-loader.gif" alt='' />
+              </div>
             </div>
         </div>
         <span id="inlineMenu" style="display: none;">

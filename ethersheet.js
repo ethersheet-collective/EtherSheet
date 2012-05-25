@@ -91,6 +91,7 @@ io.sockets.on('connection', function(socket){
       console.log(data.user_id);
       console.log(user);
       es.add_user_to_room(socket, user, data.sheet_id) 
+      socket.emit('ROOM_JOINED');
       io.sockets.in(data.sheet_id).emit(
         'USER_CHANGE', 
         {user: user, action: 'JOINED', sheet_data:sheets[data.sheet_id]}
