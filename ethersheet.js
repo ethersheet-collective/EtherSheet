@@ -6,7 +6,7 @@ var config = require('./config');
 /***********************************************
  * EtherSheetService
  ***********************************************/
-exports.EtherSheetService = function EtherSheetService(){
+var EtherSheetService = exports.EtherSheetService = function(){
   events.EventEmitter.call(this);
 };
 
