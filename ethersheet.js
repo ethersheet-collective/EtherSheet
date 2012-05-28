@@ -23,7 +23,6 @@ EtherSheetService.sql = mysql.createClient({
 
 // EtherSheet Internal Data
 EtherSheetService.sheets = {};
-EtherSheetService.default_sheetdata = '[{"metadata":{"columns":5,"rows":15,"title":"","col_widths":{"c0":"120","c1":"120","c2":"120","c3":"120","c4":"120"}},"data":{"r0":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r1":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r2":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r3":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r4":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r5":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r6":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r7":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r8":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r9":{"h":"18px","c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r10":{"c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r11":{"c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r12":{"c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r13":{"c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}},"r14":{"c0":{"value":"","colspan":null,"cl":""},"c1":{"value":"","colspan":null,"cl":""},"c2":{"value":"","colspan":null,"cl":""},"c3":{"value":"","colspan":null,"cl":""},"c4":{"value":"","colspan":null,"cl":""}}}}]';
 EtherSheetService.colors = [
   '#1BA5E0',
   '#0EF012',
@@ -115,12 +114,12 @@ EtherSheetService.prototype.create_sheet = function(sheet_id,cb){
   var es = this;
   EtherSheetService.sql.query(
     'INSERT INTO sheets VALUES (?, ?)',
-    [sheet_id, EtherSheetService.default_sheetdata],
+    [sheet_id, ''],
     function(err, results, fields){
       if(err) {
         throw err;
       }
-      cb({sheetid: sheet_id, sheetdata: EtherSheetService.default_sheetdata});
+      cb({sheetid: sheet_id, sheetdata: ""});
     }
   );
 }; 

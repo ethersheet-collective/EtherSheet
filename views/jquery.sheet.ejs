@@ -74,12 +74,17 @@
                   socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
                   console.log('a user has ' + data.action + ' with id: ' + data.user.token);
                 });
+                var sheet_init = "";
+                console.log(data);
+                data == null ?
+                  sheet_init = "10x30" :
+                  sheet_init = $.sheet.makeTable.json(data);
                 socket.on('ROOM_JOINED', function(){
                   $('#jQuerySheet0').sheet({
                     title: sheet_title,
                     socket: socket,
                     inlineMenu: inlineMenu($.sheet.instance),
-                    buildSheet: $.sheet.makeTable.json(data),
+                    buildSheet: sheet_init,
                     height: window.innerHeight - 100,
                     fnSave: function(){
                       $('#jSheetTitle_0').css('background','#f00');
