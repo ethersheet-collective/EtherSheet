@@ -5,5 +5,6 @@ module.exports = {
   mysql_database: 'ethersheet',
   mysql_user: 'ethersheet',
   mysql_password: 'ethersheet',
-  mysql_host: 'localhost'
+  mysql_host: 'localhost',
+  debug: false
 }

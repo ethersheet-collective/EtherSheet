@@ -33,26 +33,23 @@ EtherSheetService.colors = [
 ];
 
 // EtherSheet API
-EtherSheetService.prototype.find_or_create_user = function(user_id, callback){
+EtherSheetService.prototype.find_or_create_user = function(user_id, cb){
   var es = this;
   EtherSheetService.sql.query(
-    'SELECT * FROM users WHERE token = ?', 
+    'SELECT * FROM users WHERE user_id = ?', 
     [user_id], 
     function(err, results, fields) {
-      if(err) {
-        throw err;
-      }
       if(results.length > 0){ //  user exists
-        callback(results[0]);
+        cb(err, results[0]);
       } else {
         EtherSheetService.sql.query(
-          'INSERT INTO users (token, color) VALUES (?, ?)',
-          [user_id, es.get_color()],
+          'INSERT INTO users (user_id, color) VALUES (?, ?)',
+          [user_id, es.get_random_color()],
           function(err, results, fields){
             if(err) {
               throw err;
             } else {
-              es.find_or_create_user(user_id, callback);
+              es.find_or_create_user(user_id, cb);
             }
           }
         );
@@ -65,16 +62,19 @@ EtherSheetService.prototype.add_user_to_room = function(user, sheet_id, cb){
   EtherSheetService.sheets[sheet_id] = EtherSheetService.sheets[sheet_id] || {count:0, users:{}};
   EtherSheetService.sheets[sheet_id].count++;
   EtherSheetService.sheets[sheet_id].users[user.user_id] = user;
-  console.log('user ' + user.token + ' joined room ' + sheet_id);
-  cb(null);
+  console.log('user ' + user.user_id + ' joined room ' + sheet_id);
+  cb(undefined, null);
 };
 
 EtherSheetService.prototype.remove_user_from_room = function(user){
-  EtherSheetService.sheets[user.sheet_id].count--;
   delete(EtherSheetService.sheets[user.sheet_id].users[user.user_id]);
+  EtherSheetService.sheets[user.sheet_id].count--;
+  if(EtherSheetService.sheets[user.sheet_id].count > 1){
+    delete(EthersheetService.sheets[user.sheet_id]);
+  }
 }
 
-EtherSheetService.prototype.get_color = function(){
+EtherSheetService.prototype.get_random_color = function(){
   idx = Math.floor(Math.random() * 100);  
   return EtherSheetService.colors[idx % EtherSheetService.colors.length]
 };
@@ -96,12 +96,9 @@ EtherSheetService.prototype.find_or_create_sheet = function(sheet_id,cb){
     'SELECT * FROM sheets WHERE sheetid = ?', 
     [sheet_id], 
     function(err, results, fields) {
-      if(err) {
-        throw err;
-      }
       if(results.length > 0){ // a sheet exists
         //load the data and emit an event
-        cb(results[0]);
+        cb(err, results[0]);
       } else {
         //create a new sheet
         es.create_sheet(sheet_id,cb);
@@ -116,10 +113,7 @@ EtherSheetService.prototype.create_sheet = function(sheet_id,cb){
     'INSERT INTO sheets VALUES (?, ?)',
     [sheet_id, ''],
     function(err, results, fields){
-      if(err) {
-        throw err;
-      }
-      cb({sheetid: sheet_id, sheetdata: ""});
+      cb(err, {sheetid: sheet_id, sheetdata: ""});
     }
   );
 }; 

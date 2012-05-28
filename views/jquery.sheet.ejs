@@ -32,9 +32,6 @@
 				<link rel="stylesheet" type="text/css" href="/plugins/jquery.colorPicker.css" />
 				<script type="text/javascript" src="/plugins/jquery.colorPicker.min.js"></script>
 			<!--/ColorPicker-->
-			<!--Theme Switcher Tool-->
-				<!--<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>-->
-			<!--/Theme Switcher Tool-->
 			<!--Elastic-->
 				<script type="text/javascript" src="/plugins/jquery.elastic.min.js"></script>
 			<!--/Elastic-->
@@ -72,10 +69,9 @@
                 socket.on('USER_CHANGE', function(data){
                   update_usermenu(data.sheet_data);
                   socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
-                  console.log('a user has ' + data.action + ' with id: ' + data.user.token);
                 });
+
                 var sheet_init = "";
-                console.log(data);
                 data == null ?
                   sheet_init = "10x30" :
                   sheet_init = $.sheet.makeTable.json(data);
@@ -85,7 +81,8 @@
                     socket: socket,
                     inlineMenu: inlineMenu($.sheet.instance),
                     buildSheet: sheet_init,
-                    height: window.innerHeight - 100,
+                    height: window.innerHeight - 25,
+                    width: window.innerWidth - 5,
                     fnSave: function(){
                       $('#jSheetTitle_0').css('background','#f00');
                       $.post('/save', 
@@ -132,8 +129,6 @@
                  buildSheet: $.sheet.makeTable.fromSize('5x100').add($.sheet.makeTable.fromSize('5x100'))
                  });
                  */
-                //This is to give a themeswitcher on the page
-                //$('#themeSwitcher').themeswitcher();
                 
                 //This is for some fancy menu stuff
                 var o = $('#structures');
@@ -183,7 +178,7 @@
         <!--Page styles-->
         <style>
             body {
-                background-color: #ccc;
+                background-color: #FFF;
                 padding: 0px;
                 margin: 0px;
                 color: black;
@@ -192,7 +187,7 @@
             }
             
             .wrapper {
-                margin: 10px;
+                margin: 1px;
                 background-color: #CCCCCC;
             }
             
@@ -205,9 +200,9 @@
                 100;
             }
             
-			#lockedMenu * {
-				font-size: .85em ! important;
-			}
+            #lockedMenu * {
+                    font-size: .85em ! important;
+            }
 			
             #structures {
                 text-align: left;
@@ -244,11 +239,6 @@
             <img src="/ajax-loader.gif" alt='' />
           </div>
         </div>
-        <h1 id="header" class="ui-state-default">
-          <div id='user-menu-container'>
-            <div id='user-count'>1</span>
-          </div>
-        </h1>
         <div id="mainWrapper" class="ui-corner-all wrapper">
             <div id="jQuerySheet0" class="jQuerySheet" style="height: 100%;">
               <div id='loading-text'>
@@ -316,7 +306,11 @@
 					<img alt="Web Link" src="/images/page_link.png"/></a>
 				<a href="#" onclick="sheetInstance.toggleFullScreen(); $('#lockedMenu').toggle(); return false;" title="Toggle Full Screen">
 					<img alt="Web Link" src="/images/arrow_out.png"/></a><!--<a href="#" onclick="insertAt('jSheetControls_formula', '~np~text~'+'/np~');return false;" title="Non-parsed"><img alt="Non-parsed" src="/images/noparse.png"/></a>-->
+
 			</span>
+                        <div id='user-menu-container'>
+                          <div id='user-count'>1</span>
+                        </div>
 		</span>
         <div id="footer" class="ui-corner-all">
         </div>

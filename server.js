@@ -10,8 +10,6 @@ var es = new EtherSheetService();
 /***********************************************
  * Express HTTP Server
  ***********************************************/
-/* TODO: PLEASE PLEASE PLEASE do not deploy this for production with the self
-         signed cert.  It would be a REALLY BAD IDEA */
 var app = express.createServer({
   key: fs.readFileSync(config.https_key),
   cert: fs.readFileSync(config.https_cert)
@@ -43,7 +41,10 @@ app.post('/save', function(req,res){
 
 //get the sheet in json form
 app.get('/s/:sheetid.json', function(req,res){
-  es.find_or_create_sheet(req.params.sheetid, function(sheet){
+  es.find_or_create_sheet(req.params.sheetid, function(err, sheet){
+    if(err){
+      throw(err);
+    }
     res.send(sheet.sheetdata);
   });
 });
@@ -62,13 +63,18 @@ var io = io.listen(app);
 io.sockets.on('connection', function(socket){
 
   socket.on('JOIN_ROOM', function(data){
-    es.find_or_create_user(data.user_id, function(user){ 
+    es.find_or_create_user(data.user_id, function(err, user){ 
+      if(err){
+        throw(err);
+      }
       console.log(data.user_id);
       console.log(user);
       socket.udata = user;
-      socket.udata.user_id = data.user_id;
       socket.udata.sheet_id = data.sheet_id;
-      es.add_user_to_room(socket.udata, data.sheet_id, function(){
+      es.add_user_to_room(socket.udata, data.sheet_id, function(err){
+        if(err){
+          console.log(err);
+        }
         socket.join(data.sheet_id);
         socket.emit('ROOM_JOINED');
         io.sockets.in(data.sheet_id).emit(
@@ -88,8 +94,7 @@ io.sockets.on('connection', function(socket){
   socket.on('disconnect', function(){
     socket.leave(socket.udata.sheet_id);
     es.remove_user_from_room(socket.udata);
-    console.log('user ' + socket.udata.user_id + ' LEFT room ' + socket.udata.sheet_id);
-    io.sockets.in(socket.udata.sheet_id).emit('USER_CHANGE', {user_id: socket.udata.user_id, action: 'LEFT', sheet_data:EtherSheetService.sheets[socket.udata.sheet_id]});
+    io.sockets.in(socket.udata.sheet_id).emit('USER_CHANGE', {user: socket.udata, action: 'LEFT', sheet_data:EtherSheetService.sheets[socket.udata.sheet_id]});
   });
 
 });

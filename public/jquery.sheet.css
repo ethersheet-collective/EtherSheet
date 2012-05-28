@@ -454,8 +454,6 @@
   width: 30px;
   border: 1px solid #ccc;
   float: right;
-  top: -15px;
-  position: relative;
 }
 #user-count{
   font-size: 12px;
