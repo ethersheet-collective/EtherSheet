@@ -70,7 +70,7 @@ EtherSheetService.prototype.remove_user_from_room = function(user){
   delete(EtherSheetService.sheets[user.sheet_id].users[user.user_id]);
   EtherSheetService.sheets[user.sheet_id].count--;
   if(EtherSheetService.sheets[user.sheet_id].count > 1){
-    delete(EthersheetService.sheets[user.sheet_id]);
+    delete(EtherSheetService.sheets[user.sheet_id]);
   }
 }
 
