@@ -75,7 +75,7 @@ EtherSheetService.prototype.remove_user_from_room = function(user){
 }
 
 EtherSheetService.prototype.get_random_color = function(){
-  idx = Math.floor(Math.random() * 100);  
+  var idx = Math.floor(Math.random() * 100);  
   return EtherSheetService.colors[idx % EtherSheetService.colors.length]
 };
 

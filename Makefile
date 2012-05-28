@@ -1,3 +1,3 @@
 test:
-	./node_modules/.bin/mocha -R landing -r should test/unit/*.js
+	./node_modules/.bin/mocha -R spec -r should test/unit/*.js
 .PHONY: test
