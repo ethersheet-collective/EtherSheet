@@ -450,8 +450,8 @@
 .styleWrap
 { word-wrap: break-word; }
 #user-menu-container{
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 50px;
   border: 1px solid #ccc;
   float: right;
 }
@@ -461,7 +461,7 @@
   text-align: center;
   margin: auto;
   width: 15px;
-  margin-top: 6px;
+  margin-top: 3px;
 }
 #loading-text{
   font-size: 24px;
@@ -495,4 +495,7 @@
 .wrapper{
   height:100%;
 }
-
+.jSheetInlineMenu a img {
+  height: 24px;
+  width: 24px;
+}
