@@ -17,9 +17,13 @@
     "mysql": ">=0.9.5",
     "socket.io": ">=0.9.5"
   },
-  "main" : "server",
+  "devDependencies": {
+    "mocha": ">=1.0.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
   "directories" : { 
     "lib" : "./lib"
-  },
-  "devDependencies": {}
+  }
 }
