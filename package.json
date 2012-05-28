@@ -18,7 +18,8 @@
     "socket.io": ">=0.9.5"
   },
   "devDependencies": {
-    "mocha": ">=1.0.0"
+    "mocha": ">=1.0.0",
+    "webdriverjs": ">=0.6.0"
   },
   "scripts": {
     "test": "mocha"
