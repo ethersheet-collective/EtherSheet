@@ -24,7 +24,7 @@
     "should": ">=0.6.3"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "make test"
   },
   "directories" : { 
     "lib" : "./lib"
