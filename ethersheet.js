@@ -40,7 +40,7 @@ EtherSheetService.prototype.find_or_create_user = function(user_id, cb){
     [user_id], 
     function(err, results, fields) {
       if(results.length > 0){ //  user exists
-        cb(err, results[0]);
+        cb(err, results[0], results);
       } else {
         EtherSheetService.sql.query(
           'INSERT INTO users (user_id, color) VALUES (?, ?)',
@@ -62,15 +62,14 @@ EtherSheetService.prototype.add_user_to_room = function(user, sheet_id, cb){
   EtherSheetService.sheets[sheet_id] = EtherSheetService.sheets[sheet_id] || {count:0, users:{}};
   EtherSheetService.sheets[sheet_id].count++;
   EtherSheetService.sheets[sheet_id].users[user.user_id] = user;
-  console.log('user ' + user.user_id + ' joined room ' + sheet_id);
-  cb(undefined, null);
+  cb(null, null);
 };
 
-EtherSheetService.prototype.remove_user_from_room = function(user){
-  delete(EtherSheetService.sheets[user.sheet_id].users[user.user_id]);
-  EtherSheetService.sheets[user.sheet_id].count--;
-  if(EtherSheetService.sheets[user.sheet_id].count > 1){
-    delete(EtherSheetService.sheets[user.sheet_id]);
+EtherSheetService.prototype.remove_user_from_room = function(user, sheet_id){
+  delete(EtherSheetService.sheets[sheet_id].users[user.user_id]);
+  EtherSheetService.sheets[sheet_id].count--;
+  if(EtherSheetService.sheets[sheet_id].count < 1){
+    delete(EtherSheetService.sheets[sheet_id]);
   }
 }
 
@@ -98,7 +97,7 @@ EtherSheetService.prototype.find_or_create_sheet = function(sheet_id,cb){
     function(err, results, fields) {
       if(results.length > 0){ // a sheet exists
         //load the data and emit an event
-        cb(err, results[0]);
+        cb(err, results[0], results);
       } else {
         //create a new sheet
         es.create_sheet(sheet_id,cb);
@@ -113,7 +112,25 @@ EtherSheetService.prototype.create_sheet = function(sheet_id,cb){
     'INSERT INTO sheets VALUES (?, ?)',
     [sheet_id, ''],
     function(err, results, fields){
-      cb(err, {sheetid: sheet_id, sheetdata: ""});
+      cb(err, {sheetid: sheet_id, sheetdata: ""}, results);
     }
   );
 }; 
+
+EtherSheetService.prototype.delete_user = function(user_id, cb){
+  EtherSheetService.sql.query(
+    'DELETE FROM users WHERE user_id = ?', [user_id],
+    function(err, results){
+      cb(err, results);
+    }
+  );
+};
+
+EtherSheetService.prototype.delete_sheet = function(sheetid, cb){
+  EtherSheetService.sql.query(
+    'DELETE FROM sheets WHERE sheetid = ?', [sheetid],
+    function(err, results){
+      cb(err, results);
+    }
+  );
+};
