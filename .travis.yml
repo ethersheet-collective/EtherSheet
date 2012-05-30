@@ -8,5 +8,5 @@ notifications:
     - cooperq@cooperq.com
 before_script:
   - mysql -uroot < test/test.sql
-  - cp test/config-test.js ../config.js
+  - cp test/config-test.js config.js
 
