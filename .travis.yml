@@ -5,3 +5,8 @@ node_js:
 notifications:
   email:
     - ted@radicaldesigns.org 
+    - cooperq@cooperq.com
+before_script:
+  - mysql -uroot < test/test.sql
+  - cp test/config-test.js ../config.js
+
