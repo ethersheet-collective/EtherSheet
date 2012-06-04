@@ -1,5 +1,6 @@
-var EtherSheetService = require('../../ethersheet.js').EtherSheetService;
+var EtherSheetService = require('../../lib/ethersheet.js').EtherSheetService;
 var _ = require('underscore');
+var config = require('../config-test.js');
 
 describe('EtherSheetService', function(){
 
@@ -13,7 +14,7 @@ describe('EtherSheetService', function(){
     })
 
     it("should get a random color", function(){
-      var es = new EtherSheetService();
+      var es = new EtherSheetService(config);
       var colors = [];
       for(var i=0; i<100; i++){
         colors.push(es.get_random_color());
@@ -25,13 +26,14 @@ describe('EtherSheetService', function(){
 
   describe('.sql', function(){
     it("should have a sql connection", function(){
-      EtherSheetService.should.have.property('sql');
-      EtherSheetService.sql.should.have.property('query');
+      var es = new EtherSheetService(config);
+      es.should.have.property('sql');
+      es.sql.should.have.property('query');
     })
   })
 
   describe('users', function(){
-    var es = new EtherSheetService();
+    var es = new EtherSheetService(config);
     it('should delete a user', function(done){
       es.delete_user('test',function(err, results){
         if(err){
@@ -64,7 +66,7 @@ describe('EtherSheetService', function(){
   })
 
   describe('sheets', function(){
-    var es = new EtherSheetService();
+    var es = new EtherSheetService(config);
     it('should delete a sheet', function(done){
       es.delete_sheet('test',function(err, results){
         if(err){
@@ -102,7 +104,7 @@ describe('EtherSheetService', function(){
   })
 
   describe('adding and removing user from rooms', function(){
-    var es = new EtherSheetService();
+    var es = new EtherSheetService(config);
     var test_sheet = '';
     var test_user = '';
     before(function(done){
