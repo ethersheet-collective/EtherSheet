@@ -1494,7 +1494,7 @@ jQuery.sheet = {
                     if(s.socket && cell){
                       cell.row = jS.cellLast.row
                       cell.col = jS.cellLast.col
-                      s.socket.emit('message', { action:'cellEditDone', args:{cell: cell, user: s.socket.udata.user} });
+                      s.socket.emit('message', { action:'cellEditDone', args:{cell: cell, sheet_idx: jS.i, user: s.socket.udata.user} });
                     }
                     if (v != prevVal || forceCalc) {
                       jS.calc();
@@ -2688,7 +2688,7 @@ jQuery.sheet = {
                                       */
                                       //socket
         if(s.socket){
-          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata, last_row: jS.rowLast, last_col: jS.colLast } });
+          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata, last_row: jS.rowLast, last_col: jS.colLast, sheet_idx: jS.i } });
         }
         if (typeof(loc.col) != 'undefined') {
           jS.cellLast.td = td; //save the current cell/td
@@ -4084,8 +4084,8 @@ jQuery.sheet = {
         cell_active: function(data){
           console.log('cell active socket rcd');
           console.log(data.user);
-          var td = jS.getTd(I,data.loc.row,data.loc.col);
-          var last_td = jS.getTd(I,data.last_row,data.last_col);
+          var td = jS.getTd(data.sheet_idx,data.loc.row,data.loc.col);
+          var last_td = jS.getTd(data.sheet_idx,data.last_row,data.last_col);
           jQuery(last_td).css('background', '');
           jQuery(td).css('background', data.user.color);
         },
@@ -4093,8 +4093,8 @@ jQuery.sheet = {
           console.log('cell edit done socket rcd');
           console.log('user');
           console.log(data.user);
-          var td = jS.getTd(I,data.cell.row,data.cell.col);
-          jS.createCell(I,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
+          var td = jS.getTd(data.sheet_idx,data.cell.row,data.cell.col);
+          jS.createCell(data.sheet_idx,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
           if(data.cell.formula){jQuery(td).attr('formula',data.cell.formula);}
           jS.calc();
         },
