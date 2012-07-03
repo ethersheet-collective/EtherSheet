@@ -61,7 +61,7 @@ jQuery.fn.extend({
         calculations:   {},               //object, used to extend the standard functions that come with sheet
         cellSelectModel:  'excel',            //string, 'excel' || 'oo' || 'gdocs' Excel sets the first cell onmousedown active, openoffice sets the last, now you can choose how you want it to be ;)
         autoAddCells:   true,             //bool, when user presses enter on the last row/col, this will allow them to add more cells, thus improving performance and optimizing modification speed
-        resizable:      false,             //bool, makes the $(obj).sheet(); object resizeable, also adds a resizable formula textarea at top of sheet
+        resizable:      true,             //bool, makes the $(obj).sheet(); object resizeable, also adds a resizable formula textarea at top of sheet
         autoFiller:     false,              //bool, the little guy that hangs out to the bottom right of a selected cell, users can click and drag the value to other cells
         minSize:      {rows: 15, cols: 5},      //object - {rows: int, cols: int}, Makes the sheet stay at a certain size when loaded in edit mode, to make modification more productive
         forceColWidthsOnStartup:true,           //bool, makes cell widths load from pre-made colgroup/col objects, use this if you plan on making the col items, makes widths more stable on startup
@@ -80,12 +80,12 @@ jQuery.fn.extend({
     return this;
   },
   disableSelectionSpecial : function() { 
-          this.each(function() { 
-                  this.onselectstart = function() { return false; }; 
-                  this.unselectable = "on"; 
-                  jQuery(this).css('-moz-user-select', 'none'); 
-          });
-      return this;
+    this.each(function() { 
+      this.onselectstart = function() { return false; }; 
+      this.unselectable = "on"; 
+      jQuery(this).css('-moz-user-select', 'none'); 
+    });
+    return this;
   },
   getSheet: function() {
     var I = parseInt(jQuery(this).attr('sheetInstance'));
@@ -4048,12 +4048,15 @@ jQuery.sheet = {
 
       jSS: {
         cell_active: function(data){
+          console.log(data.user);
           var td = jS.getTd(I,data.loc.row,data.loc.col);
           var last_td = jS.getTd(I,data.last_row,data.last_col);
           jQuery(last_td).css('background', '');
           jQuery(td).css('background', data.user.color);
         },
         cellEditDone: function(data){
+          console.log('user');
+          console.log(data.user);
           var td = jS.getTd(I,data.cell.row,data.cell.col);
           jS.createCell(I,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
           if(data.cell.formula){jQuery(td).attr('formula',data.cell.formula);}

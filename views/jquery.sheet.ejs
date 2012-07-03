@@ -67,6 +67,7 @@
                 });
 
                 socket.on('USER_CHANGE', function(data){
+                  
                   update_usermenu(data.sheet_data);
                   socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
                 });
@@ -81,8 +82,8 @@
                     socket: socket,
                     inlineMenu: inlineMenu($.sheet.instance),
                     buildSheet: sheet_init,
-                    height: window.innerHeight - 25,
-                    width: window.innerWidth - 5,
+                    height: window.innerHeight - 27,
+                    width: window.innerWidth - 7,
                     fnSave: function(){
                       $('#jSheetTitle_0').css('background','#f00');
                       $.post('/save', 
