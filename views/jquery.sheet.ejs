@@ -1,291 +1,146 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
-        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-        <META HTTP-EQUIV="Expires" CONTENT="-1">
-        <title>Ethersheet </title>
-        <!--Required-->
-        <link rel="stylesheet" type="text/css" href="/jquery.sheet.css" />
-        <link rel="stylesheet" type="text/css" href="/jquery-ui/theme/jquery-ui.css" />
-        <script type="text/javascript" src="/jquery-1.5.2.js">
-        </script>
-        <script type="text/javascript" src="/jquery.sheet.js">
-        </script>
-        <script type="text/javascript" src="/parser.js">
-        </script>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="/doc.cookie.js"></script>
-        <!--/Required-->
-		
-		<!--Optional-->
-			<!--ScrollTo-->
-				<script type="text/javascript" src="/plugins/jquery.scrollTo-min.js"></script>
-			<!--/ScrollTo-->
-			<!--jQuery UI-->
-				<script type="text/javascript" src="/jquery-ui/ui/jquery-ui.min.js"></script>
-			<!--/jQuery UI-->
-			<!--Raphaeljs - for charts-->
-				<script type="text/javascript" src="/plugins/raphael-min.js"></script>
-				<script type="text/javascript" src="/plugins/g.raphael-min.js"></script>
-			<!--/Raphaeljs-->
-			<!--ColorPicker-->
-				<link rel="stylesheet" type="text/css" href="/plugins/jquery.colorPicker.css" />
-				<script type="text/javascript" src="/plugins/jquery.colorPicker.min.js"></script>
-			<!--/ColorPicker-->
-			<!--Elastic-->
-				<script type="text/javascript" src="/plugins/jquery.elastic.min.js"></script>
-			<!--/Elastic-->
-			<!--Advanced_Math-->
-				<script type="text/javascript" src="/jquery.sheet.advancedfn.js"></script>
-			<!--/Advanced_Math-->
-			<!--Finance-->
-				<script type="text/javascript" src="/jquery.sheet.financefn.js"></script>
-			<!--/Finance-->
-		<!--/Optional-->
-        <script type="text/javascript">
-            $(function(){
-                //Here is where we initiate the sheets
-                //every time sheet is created it creates a new jQuery.sheet.instance (array), to manipulate each sheet, the jQuery object is returned
-              $.getJSON('/s/<%=sheet_title%>.json', function(data) {
-                var sheet_title = "<%= sheet_title %>";
-                var socket = io.connect('https://' + location.hostname + ":<%= socket_port %>");
+<head>
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="-1">
+  <title>Ethersheet </title>
 
-                socket.on('connect', function() {
-                  $('#disconnect-message').hide();
-                  console.log('connected');
-                  if(!docCookies.hasItem('user_id')){
-                    docCookies.setItem('user_id', randomString(20));
-                  }
-                  socket.emit('JOIN_ROOM', { sheet_id: '<%= sheet_title %>', user_id: docCookies.getItem('user_id') });
-                });
-                
-                socket.on('disconnect', function() {
-                  $('#disconnect-message').show();
-                  window.setInterval(function(){
-                    var socket = io.connect('https://' + location.hostname + ":<%= socket_port %>");
-                  }, 1000);
-                });
+<!--Required-->
+  <link rel="stylesheet" type="text/css" href="/jquery.sheet.css" />
+  <link rel="stylesheet" type="text/css" href="/jquery-ui/theme/jquery-ui.css" />
+  <script type="text/javascript" src="/jquery-1.5.2.js"></script>
+  <script type="text/javascript" src="/jquery.sheet.js"></script>
+  <script type="text/javascript" src="/parser.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="/doc.cookie.js"></script>
+<!--/Required-->
+	
+<!--Optional-->
+	<!--ScrollTo-->
+	<script type="text/javascript" src="/plugins/jquery.scrollTo-min.js"></script>
+	<!--/ScrollTo-->
+	<!--jQuery UI-->
+	<script type="text/javascript" src="/jquery-ui/ui/jquery-ui.min.js"></script>
+	<!--/jQuery UI-->
+	<!--Raphaeljs - for charts-->
+	<script type="text/javascript" src="/plugins/raphael-min.js"></script>
+	<script type="text/javascript" src="/plugins/g.raphael-min.js"></script>
+	<!--/Raphaeljs-->
+	<!--ColorPicker-->
+	<link rel="stylesheet" type="text/css" href="/plugins/jquery.colorPicker.css" />
+	<script type="text/javascript" src="/plugins/jquery.colorPicker.min.js"></script>
+	<!--/ColorPicker-->
+	<!--Elastic-->
+	<script type="text/javascript" src="/plugins/jquery.elastic.min.js"></script>
+	<!--/Elastic-->
+	<!--Advanced_Math-->
+	<script type="text/javascript" src="/jquery.sheet.advancedfn.js"></script>
+	<!--/Advanced_Math-->
+	<!--Finance-->
+	<script type="text/javascript" src="/jquery.sheet.financefn.js"></script>
+	<!--/Finance-->
+<!--/Optional-->
 
-                socket.on('USER_CHANGE', function(data){
-                  
-                  update_usermenu(data.sheet_data);
-                  socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
-                });
+<!--Page init-->    
+  <link rel="stylesheet" type="text/css" href="/sheet.css" />
+  <script type="text/javascript">
+    var SHEET_ID = '<%=sheet_id%>';
+    var SOCKET_PORT = <%=socket_port%>;
+    var SOCKET_URL = 'https://' + location.hostname + ":" + SOCKET_PORT;
+  </script>
+  <script type="text/javascript" src="/sheet_init.js"></script>
+  <script type="text/javascript">
+    //This function builds the inline menu to make it easy to interact with each sheet instance
+    function inlineMenu(I){
+      I = (I ? I.length : 0);
+      
+      //we want to be able to edit the html for the menu to make them multi-instance
+      var html = $('#inlineMenu').html().replace(/sheetInstance/g, "$.sheet.instance[" + I + "]");
+      
+      var menu = $(html);
+      
+      //The following is just so you get an idea of how to style cells
+      menu.find('.colorPickerCell').colorPicker().change(function(){
+          $.sheet.instance[I].cellChangeStyle('background-color', $(this).val());
+      });
+      
+      menu.find('.colorPickerFont').colorPicker().change(function(){
+          $.sheet.instance[I].cellChangeStyle('color', $(this).val());
+      });
+      
+      menu.find('.colorPickers').children().eq(1).css('background-image', "url('/images/palette.png')");
+      menu.find('.colorPickers').children().eq(3).css('background-image', "url('/images/palette_bg.png')");             
 
-                var sheet_init = "";
-                data == null ?
-                  sheet_init = "10x30" :
-                  sheet_init = $.sheet.makeTable.json(data);
-                socket.on('ROOM_JOINED', function(){
-                  $('#jQuerySheet0').sheet({
-                    title: sheet_title,
-                    socket: socket,
-                    inlineMenu: inlineMenu($.sheet.instance),
-                    buildSheet: sheet_init,
-                    height: window.innerHeight - 27,
-                    width: window.innerWidth - 7,
-                    fnSave: function(){
-                      $('#jSheetTitle_0').css('background','#f00');
-                      $.post('/save', 
-                            {sheet_id: sheet_title, sheet_data: JSON.stringify($.sheet.instance[0].exportSheet.json())},
-                          function(data){
-                            $('#jSheetTitle_0').css('background','none');
-                          }
-                      );
-                    },
-                    autoFiller: true
-                  });
-                });
-              });
-				
-                
-                //examples of how to use jQuery.sheet
-                /*
-                 //Inline sheet(s), non-editable (like a gridview)
-                 $('.jQuerySheet').sheet({
-                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
-                 buildSheet: true, //will turn object #jQuerySheet's child tables into sheets
-                 editable: false,
-                 calcOff: true
-                 });
-                 
-                 //New single custom sized sheet
-                 $('#jQuerySheet').sheet({
-                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
-                 inlineMenu: inlineMenu(jQuery.sheet.instance),
-                 buildSheet: '5x100'
-                 });
-                 
-                 //Custom object sheet(s)
-                 $('#jQuerySheet').sheet({
-                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
-                 inlineMenu: inlineMenu(jQuery.sheet.instance),
-                 buildSheet: $('#jQuerySheet').find('table')
-                 });
-                 
-                 //Custom object sheet(s)
-                 $('#jQuerySheet').sheet({
-                 title: 'jQuery.sheet - The Web Based Spreadsheet Demo',
-                 inlineMenu: inlineMenu(jQuery.sheet.instance),
-                 buildSheet: $.sheet.makeTable.fromSize('5x100').add($.sheet.makeTable.fromSize('5x100'))
-                 });
-                 */
-                
-                //This is for some fancy menu stuff
-                var o = $('#structures');
-                var top = o.offset().top - 300;
-                $(document).scroll(function(e){
-                    if ($(this).scrollTop() > top) {
-                        $('#lockedMenu').removeClass('locked');
-                    }
-                    else {
-                        $('#lockedMenu').addClass('locked');
-                    }
-                }).scroll();
-            });
-            
-            //This function builds the inline menu to make it easy to interact with each sheet instance
-            function inlineMenu(I){
-                I = (I ? I.length : 0);
-                
-                //we want to be able to edit the html for the menu to make them multi-instance
-                var html = $('#inlineMenu').html().replace(/sheetInstance/g, "$.sheet.instance[" + I + "]");
-                
-                var menu = $(html);
-                
-                //The following is just so you get an idea of how to style cells
-                menu.find('.colorPickerCell').colorPicker().change(function(){
-                    $.sheet.instance[I].cellChangeStyle('background-color', $(this).val());
-                });
-                
-                menu.find('.colorPickerFont').colorPicker().change(function(){
-                    $.sheet.instance[I].cellChangeStyle('color', $(this).val());
-                });
-                
-                menu.find('.colorPickers').children().eq(1).css('background-image', "url('/images/palette.png')");
-                menu.find('.colorPickers').children().eq(3).css('background-image', "url('/images/palette_bg.png')");
-                
-                
-                return menu;
-            }
-            
-            function goToObj(s){
-                $('html, body').animate({
-                    scrollTop: $(s).offset().top
-                }, 'slow');
-                return false;
-            }
-        </script>
-        <!--Page styles-->
-        <style>
-            body {
-                background-color: #FFF;
-                padding: 0px;
-                margin: 0px;
-                color: black;
-                font-family: sans-serif;
-                font-size: 13px;
-            }
-            
-            .wrapper {
-                margin: 1px;
-                background-color: #CCCCCC;
-            }
-            
-            .locked {
-                position: fixed;
-                top: expression(eval(document.body.scrollTop) + "px");
-                left:
-                20px;
-                z-index:
-                100;
-            }
-            
-            #lockedMenu * {
-                    font-size: .85em ! important;
-            }
-			
-            #structures {
-                text-align: left;
-                font-size: 1.5em;
-                padding: 10px;
-                border: none;
-            }
-            
-            #header {
-                text-align: left;
-                font-size: 1.5em;
-                padding: 18px;
-                border: none;
-                padding-left: 150px;
-            }
-            
-            #footer {
-                text-align: center;
-                color: white;
-                font-size: .9em;
-            }
-            
-            #footer a {
-                font-size: 1.2em;
-                color: #FFFFFF;
-            }
-        </style>
-    </head>
-    <body>
-        <div id='disconnect-message'>
-          <div id='disconnect-text'>
-            You have been disconnected from the server, attempting to reconnect...
-            <br />
-            <img src="/images/ajax-loader.gif" alt='' />
-          </div>
-        </div>
-        <div id="mainWrapper" class="ui-corner-all wrapper">
-            <div id="jQuerySheet0" class="jQuerySheet" style="height: 100%;">
-              <div id='loading-text'>
-                Loading...
-                <br />
-                <img src="/images/ajax-loader.gif" alt='' />
-              </div>
-            </div>
-        </div>
-        <span id="inlineMenu" style="display: none;">
-			<span>
-				<a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected">
-					<img alt="Insert Row After Selected" src="/images/sheet_row_add.png"/></a>
-				<a href="#" onclick="sheetInstance.deleteRow(); return false;" title="Delete Row">
-					<img alt="Delete Row" src="/images/sheet_row_delete.png"/></a>
-				<a href="#" onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Insert Column After Selected">
-					<img alt="Insert Column After Selected" src="/images/sheet_col_add.png"/></a>
-				<a href="#" onclick="sheetInstance.deleteColumn(); return false;" title="Delete Column">
-					<img alt="Delete Column" src="/images/sheet_col_delete.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleBold'); return false;" title="Bold">
-					<img alt="Bold" src="/images/text_bold.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleItalics'); return false;" title="Italic">
-					<img alt="Italic" src="/images/text_italic.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleUnderline', 'styleLineThrough'); return false;" title="Underline">
-					<img alt="Underline" src="/images/text_underline.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleLineThrough', 'styleUnderline'); return false;" title="Strikethrough">
-					<img alt="Strikethrough" src="/images/text_strikethrough.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleLeft', 'styleCenter styleRight'); return false;" title="Align Left">
-					<img alt="Align Left" src="/images/text_align_left.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleCenter', 'styleLeft styleRight'); return false;" title="Align Center">
-					<img alt="Align Center" src="/images/text_align_center.png"/></a>
-				<a href="#" onclick="sheetInstance.cellStyleToggle('styleRight', 'styleLeft styleCenter'); return false;" title="Align Right">
-					<img alt="Align Right" src="/images/text_align_right.png"/></a>
-				<span class="colorPickers">
-					<input title="Foreground color" class="colorPickerFont" style="background-image: url('images/palette.png') ! important; width: 24px; height: 24px;"/>
-					<input title="Background Color" class="colorPickerCell" style="background-image: url('images/palette_bg.png') ! important; width: 24px; height: 24px;"/>
-				</span>
-				<a href="#" onclick="sheetInstance.obj.formula().val('=HYPERLINK(\'' + prompt('Enter Web Address', 'https://www.ethersheet.org/') + '\')').keydown(); return false;" title="HyperLink">
-					<img alt="Web Link" src="/images/page_link.png"/></a>
+      return menu;
+    }
+    
+    function goToObj(s){
+      $('html, body').animate({
+          scrollTop: $(s).offset().top
+      }, 'slow');
+      return false;
+    }
+  </script>
+  
+</head>
+<body>
+  
+  <div id='disconnect-message'>
+    <div id='disconnect-text'>
+      You have been disconnected from the server, attempting to reconnect...
+      <br />
+      <img src="/images/ajax-loader.gif" alt='' />
+    </div>
+  </div>
+  
+  <div id="mainWrapper" class="ui-corner-all wrapper">
+    <div id="jQuerySheet0" class="jQuerySheet" style="height: 100%;">
+      <div id='loading-text'>
+        Loading...
+        <br />
+        <img src="/images/ajax-loader.gif" alt='' />
+      </div>
+    </div>
+  </div>
 
+  <div id="inlineMenu" style="display: none;">
+		<span>
+			<a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected">
+				<img alt="Insert Row After Selected" src="/images/sheet_row_add.png"/></a>
+			<a href="#" onclick="sheetInstance.deleteRow(); return false;" title="Delete Row">
+				<img alt="Delete Row" src="/images/sheet_row_delete.png"/></a>
+			<a href="#" onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Insert Column After Selected">
+				<img alt="Insert Column After Selected" src="/images/sheet_col_add.png"/></a>
+			<a href="#" onclick="sheetInstance.deleteColumn(); return false;" title="Delete Column">
+				<img alt="Delete Column" src="/images/sheet_col_delete.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleBold'); return false;" title="Bold">
+				<img alt="Bold" src="/images/text_bold.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleItalics'); return false;" title="Italic">
+				<img alt="Italic" src="/images/text_italic.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleUnderline', 'styleLineThrough'); return false;" title="Underline">
+				<img alt="Underline" src="/images/text_underline.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleLineThrough', 'styleUnderline'); return false;" title="Strikethrough">
+				<img alt="Strikethrough" src="/images/text_strikethrough.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleLeft', 'styleCenter styleRight'); return false;" title="Align Left">
+				<img alt="Align Left" src="/images/text_align_left.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleCenter', 'styleLeft styleRight'); return false;" title="Align Center">
+				<img alt="Align Center" src="/images/text_align_center.png"/></a>
+			<a href="#" onclick="sheetInstance.cellStyleToggle('styleRight', 'styleLeft styleCenter'); return false;" title="Align Right">
+				<img alt="Align Right" src="/images/text_align_right.png"/></a>
+			<span class="colorPickers">
+				<input title="Foreground color" class="colorPickerFont" style="background-image: url('images/palette.png') ! important; width: 24px; height: 24px;"/>
+				<input title="Background Color" class="colorPickerCell" style="background-image: url('images/palette_bg.png') ! important; width: 24px; height: 24px;"/>
 			</span>
-                        <div id='user-menu-container'>
-                          <div id='user-count'>1</span>
-                        </div>
+			<a href="#" onclick="sheetInstance.obj.formula().val('=HYPERLINK(\'' + prompt('Enter Web Address', 'https://www.ethersheet.org/') + '\')').keydown(); return false;" title="HyperLink">
+				<img alt="Web Link" src="/images/page_link.png"/></a>
+
 		</span>
-        <div id="footer" class="ui-corner-all">
-        </div>
-    </body>
+    <div id='user-menu-container'>
+      <div id='user-count'>1</div>
+    </div>
+	</div>
+  
+  <div id="footer" class="ui-corner-all"></div>
+
+  </body>
 </html>
