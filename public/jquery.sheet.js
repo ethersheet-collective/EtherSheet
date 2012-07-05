@@ -23,7 +23,8 @@ http://www.gnu.org/licenses/
 */
 jQuery.fn.extend({
   sheet: function(settings) {
-    jQuery(this).each(function() { var parent = jQuery(this);
+    jQuery(this).each(function() { 
+      var parent = jQuery(this);
       var set = jQuery.extend({
         urlGet:       "sheets/enduser.documentation.html", //local url, if you want to get a sheet from a url
         urlSave:      "save.html",          //local url, for use only with the default save for sheet
@@ -48,12 +49,12 @@ jQuery.fn.extend({
         lockFormulas:     false,              //bool, turns the ability to edit any formula off
         parent:       parent,           //object, sheet's parent, DON'T CHANGE
         colMargin:      18,               //int, the height and the width of all bar items, and new rows
-        fnSave:       function() { parent.getSheet().saveSheet(); }, //fn, default save function, more of a proof of concept
-        fnOpen:       function() {          //fn, by default allows you to paste table html into a javascript prompt for you to see what it looks likes if you where to use sheet
-                    var t = prompt('Paste your table html here');
-                    if (t) {
-                      parent.getSheet().openSheet(t);
-                    }
+        fnSave: function() { parent.getSheet().saveSheet(); }, //fn, default save function, more of a proof of concept
+        fnOpen: function() {          //fn, by default allows you to paste table html into a javascript prompt for you to see what it looks likes if you where to use sheet
+          var t = prompt('Paste your table html here');
+          if (t) {
+            parent.getSheet().openSheet(t);
+          }
         },
         fnClose:      function() {},          //fn, default clase function, more of a proof of concept
         
