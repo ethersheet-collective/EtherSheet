@@ -67,6 +67,7 @@
                 });
 
                 socket.on('USER_CHANGE', function(data){
+                  
                   update_usermenu(data.sheet_data);
                   socket.udata = data.sheet_data.users[docCookies.getItem('user_id')]
                 });
@@ -81,8 +82,8 @@
                     socket: socket,
                     inlineMenu: inlineMenu($.sheet.instance),
                     buildSheet: sheet_init,
-                    height: window.innerHeight - 25,
-                    width: window.innerWidth - 5,
+                    height: window.innerHeight - 27,
+                    width: window.innerWidth - 7,
                     fnSave: function(){
                       $('#jSheetTitle_0').css('background','#f00');
                       $.post('/save', 
@@ -236,7 +237,7 @@
           <div id='disconnect-text'>
             You have been disconnected from the server, attempting to reconnect...
             <br />
-            <img src="/ajax-loader.gif" alt='' />
+            <img src="/images/ajax-loader.gif" alt='' />
           </div>
         </div>
         <div id="mainWrapper" class="ui-corner-all wrapper">
@@ -244,7 +245,7 @@
               <div id='loading-text'>
                 Loading...
                 <br />
-                <img src="/ajax-loader.gif" alt='' />
+                <img src="/images/ajax-loader.gif" alt='' />
               </div>
             </div>
         </div>

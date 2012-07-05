@@ -61,7 +61,7 @@ jQuery.fn.extend({
         calculations:   {},               //object, used to extend the standard functions that come with sheet
         cellSelectModel:  'excel',            //string, 'excel' || 'oo' || 'gdocs' Excel sets the first cell onmousedown active, openoffice sets the last, now you can choose how you want it to be ;)
         autoAddCells:   true,             //bool, when user presses enter on the last row/col, this will allow them to add more cells, thus improving performance and optimizing modification speed
-        resizable:      false,             //bool, makes the $(obj).sheet(); object resizeable, also adds a resizable formula textarea at top of sheet
+        resizable:      true,             //bool, makes the $(obj).sheet(); object resizeable, also adds a resizable formula textarea at top of sheet
         autoFiller:     false,              //bool, the little guy that hangs out to the bottom right of a selected cell, users can click and drag the value to other cells
         minSize:      {rows: 15, cols: 5},      //object - {rows: int, cols: int}, Makes the sheet stay at a certain size when loaded in edit mode, to make modification more productive
         forceColWidthsOnStartup:true,           //bool, makes cell widths load from pre-made colgroup/col objects, use this if you plan on making the col items, makes widths more stable on startup
@@ -80,12 +80,12 @@ jQuery.fn.extend({
     return this;
   },
   disableSelectionSpecial : function() { 
-          this.each(function() { 
-                  this.onselectstart = function() { return false; }; 
-                  this.unselectable = "on"; 
-                  jQuery(this).css('-moz-user-select', 'none'); 
-          });
-      return this;
+    this.each(function() { 
+      this.onselectstart = function() { return false; }; 
+      this.unselectable = "on"; 
+      jQuery(this).css('-moz-user-select', 'none'); 
+    });
+    return this;
   },
   getSheet: function() {
     var I = parseInt(jQuery(this).attr('sheetInstance'));
@@ -299,6 +299,7 @@ jQuery.sheet = {
       trigger: function(eventType, extraParameters) {
         //wrapper for jQuery trigger of origParent, in case of further mods in the future
         extraParameters = (extraParameters ? extraParameters : []);
+
         origParent.trigger(eventType, [jS].concat(extraParameters));
       },
       spreadsheetsToArray: function(forceRebuild) {
@@ -550,20 +551,31 @@ jQuery.sheet = {
           //Let's make it redoable
           jS.cellUndoable.add(jQuery(sheet).add(o.barParent));
         },
-        addRow: function(atRow, isBefore, atRowQ) {/* creates single row
+        addRow: function(atRow, isBefore, atRowQ, socket) {/* creates single row
                               qty: int, the number of cells you'd like to add, if not specified, a dialog will ask; 
                               isBefore: bool, places cells before the selected cell if set to true, otherwise they will go after, or at end
                             */
           //socket                  
+          console.log('addrow at ' + atRow)
           jS.controlFactory.addCells(atRow, isBefore, atRowQ, 1, 'row');
+          if(!socket){
+            args = [].slice.call(arguments)
+            args[3] = true;
+            s.socket.emit('message', { action:'control_factory_trigger', args:{fnName: 'addRow', fnArgs: args} });
+          }
           jS.trigger('addRow', [atRow, isBefore, atRowQ, 1]);
         },
-        addColumn: function(atColumn, isBefore, atColumnQ) {/* creates single column
+        addColumn: function(atColumn, isBefore, atColumnQ, socket) {/* creates single column
                               qty: int, the number of cells you'd like to add, if not specified, a dialog will ask; 
                               isBefore: bool, places cells before the selected cell if set to true, otherwise they will go after, or at end
                             */
                             //socket
           jS.controlFactory.addCells(atColumn, isBefore, atColumnQ, 1, 'col');
+          if(!socket){
+            args = [].slice.call(arguments)
+            args[3] = true;
+            s.socket.emit('message', { action:'control_factory_trigger', args:{fnName: 'addColumn', fnArgs: args} });
+          }
           jS.trigger('addColumn', [atRow, isBefore, atRowQ, 1]);
         },
         barLeft: function(reloadHeights, o) { /* creates all the bars to the left of the spreadsheet
@@ -736,13 +748,13 @@ jQuery.sheet = {
             menu = jS.controlFactory.makeMenu('top', [{
               msg: jS.msg.menuInsertColumnAfter,
               fn: function(){
-                jS.controlFactory.addColumn();
+                jS.controlFactory.addColumn(jS.cellLast.col);
                 return false;
               }
             }, {
               msg: jS.msg.menuInsertColumnBefore,
               fn: function(){
-                jS.controlFactory.addColumn(null, true);
+                jS.controlFactory.addColumn(jS.cellLast.col, true);
                 return false;
               }
             }, {
@@ -754,7 +766,7 @@ jQuery.sheet = {
             }, {
               msg: jS.msg.menuDeleteColumn,
               fn: function(){
-                jS.deleteColumn();
+                jS.deleteColumn(false, jS.cellLast.col);
                 return false;
               }
             }]);
@@ -810,13 +822,13 @@ jQuery.sheet = {
             menu = jS.controlFactory.makeMenu('left', [{
                 msg: jS.msg.menuInsertRowAfter,
                 fn: function(){
-                  jS.controlFactory.addRow();
+                  jS.controlFactory.addRow(jS.cellLast.row); // we really need to pass in the row here
                   return false;
                 }
               }, {
                 msg: jS.msg.menuInsertRowBefore,
                 fn: function(){
-                  jS.controlFactory.addRow(null, true);
+                  jS.controlFactory.addRow(jS.cellLast.row, true); // we really need to pass in the row here
                   return false;
                 }
               }, {
@@ -828,7 +840,7 @@ jQuery.sheet = {
               }, {
                 msg: jS.msg.menuDeleteRow,
                 fn: function(){
-                  jS.deleteRow();
+                  jS.deleteRow(false, jS.cellLast.row);// we really need to pass in the row here
                   return false;
                 }
               }]);
@@ -849,13 +861,13 @@ jQuery.sheet = {
             menu = jS.controlFactory.makeMenu('cell', [{
                 msg: jS.msg.menuInsertColumnAfter,
                 fn: function(){
-                  jS.controlFactory.addColumn();
+                  jS.controlFactory.addColumn(jS.cellLast.col);
                   return false;
                 }
               }, {
                 msg: jS.msg.menuInsertColumnBefore,
                 fn: function(){
-                  jS.controlFactory.addColumn(null, true);
+                  jS.controlFactory.addColumn(jS.cellLast.col, true);
                   return false;
                 }
               }, {
@@ -867,7 +879,7 @@ jQuery.sheet = {
               }, {
                 msg: jS.msg.menuDeleteColumn,
                 fn: function(){
-                  jS.deleteColumn();
+                  jS.deleteColumn(false, jS.cellLast.col);
                   return false;
                 }
               }, {
@@ -875,13 +887,13 @@ jQuery.sheet = {
               },{
                 msg: jS.msg.menuInsertRowAfter,
                 fn: function(){
-                  jS.controlFactory.addRow();
+                  jS.controlFactory.addRow(jS.cellLast.row);
                   return false;
                 }
               }, {
                 msg: jS.msg.menuInsertRowBefore,
                 fn: function(){
-                  jS.controlFactory.addRow(null, true);
+                  jS.controlFactory.addRow(jS.cellLast.row, true);
                   return false;
                 }
               }, {
@@ -893,7 +905,7 @@ jQuery.sheet = {
               }, {
                 msg: jS.msg.menuDeleteRow,
                 fn: function(){
-                  jS.deleteRow();
+                  jS.deleteRow(false, jS.cellLast.row);
                   return false;
                 }
               }, {
@@ -1482,7 +1494,7 @@ jQuery.sheet = {
                     if(s.socket && cell){
                       cell.row = jS.cellLast.row
                       cell.col = jS.cellLast.col
-                      s.socket.emit('message', { action:'cellEditDone', args:{cell: cell, user: s.socket.udata.user} });
+                      s.socket.emit('message', { action:'cellEditDone', args:{cell: cell, sheet_idx: jS.i, user: s.socket.udata.user} });
                     }
                     if (v != prevVal || forceCalc) {
                       jS.calc();
@@ -2676,7 +2688,7 @@ jQuery.sheet = {
                                       */
                                       //socket
         if(s.socket){
-          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata, last_row: jS.rowLast, last_col: jS.colLast } });
+          s.socket.emit('message', {action: 'cell_active', args:{loc: loc, user:s.socket.udata, last_row: jS.rowLast, last_col: jS.colLast, sheet_idx: jS.i } });
         }
         if (typeof(loc.col) != 'undefined') {
           jS.cellLast.td = td; //save the current cell/td
@@ -3000,7 +3012,7 @@ jQuery.sheet = {
           jQuery(this).text((i + 1));
         });
       },
-      addSheet: function(size) { /* adds a spreadsheet
+      addSheet: function(size, socket) { /* adds a spreadsheet
                       size: string example "10x100" which means 10 columns by 100 rows;
                     */
         size = (size ? size : prompt(jS.msg.newSheet));
@@ -3011,11 +3023,16 @@ jQuery.sheet = {
             jS.setActiveSheet(jS.sheetCount);
           }, true);
           
+          if(!socket){
+            args = [].slice.call(arguments)
+            args[1] = true;
+            s.socket.emit('message', { action:'jsheet_trigger', args:{fnName: 'addSheet', fnArgs: args} });
+          }
           jS.trigger('addSheet', [jS.i]);
         }
       },
-      deleteSheet: function() { /* removes the currently selected sheet */
-        var oldI = jS.i;
+      deleteSheet: function(sheetId, socket) { /* removes the currently selected sheet */
+        var oldI = sheetId || jS.i;
         
         jS.obj.barHelper().remove();
 
@@ -3028,20 +3045,25 @@ jQuery.sheet = {
         
         jS.setActiveSheet(jS.i);
         jS.setDirty(true);
-        
+        if(!socket){
+          args = [].slice.call(arguments)
+          args[0] = oldI;
+          args[1] = true;
+          s.socket.emit('message', { action:'jsheet_trigger', args:{fnName: 'addSheet', fnArgs: args} });
+        }
         jS.trigger('deleteSheet', [oldI]);
       },
-      deleteRow: function(skipCalc) { /* removes the currently selected row */
-        var lastRow = jS.rowLast;
-        jS.obj.barLeft().children().eq(jS.rowLast).remove();
-        jQuery(jS.getTd(jS.i, jS.rowLast, 0)).parent().remove();
+      deleteRow: function(skipCalc, row, socket) { /* removes the currently selected row */
+        var rowLast = row || jS.rowLast;
+        jS.obj.barLeft().children().eq(rowLast).remove();
+        jQuery(jS.getTd(jS.i, rowLast, 0)).parent().remove();
         
         jS.refreshLabelsRows();
         jS.setTdIds();
         jS.obj.pane().scroll();
         
         jS.offsetFormulas({
-          row: jS.rowLast,
+          row: rowLast,
           col: 0
         }, {
           row: -1,
@@ -3052,17 +3074,23 @@ jQuery.sheet = {
         
         jS.evt.cellEditAbandon();
         
-        jS.trigger('deleteRow', lastRow);
+        if(!socket){
+          args = [].slice.call(arguments)
+          args[2] = true;
+          s.socket.emit('message', { action:'jsheet_trigger', args:{fnName: 'deleteRow', fnArgs: args} });
+        }
+
+        jS.trigger('deleteRow', rowLast);
       },
-      deleteColumn: function(skipCalc) { /* removes the currently selected column */
-        var colLast = jS.colLast;
+      deleteColumn: function(skipCalc, col, socket ) { /* removes the currently selected column */
+        var colLast = col || jS.colLast;
         jS.obj.barHelper().remove();
-        jS.obj.barTop().children().eq(jS.colLast).remove();
-        jS.obj.sheet().find('colgroup col').eq(jS.colLast).remove();
+        jS.obj.barTop().children().eq(colLast).remove();
+        jS.obj.sheet().find('colgroup col').eq(colLast).remove();
         
         var size = jS.sheetSize();
         for (var i = 0; i <= size.height; i++) {
-          jQuery(jS.getTd(jS.i, i, jS.colLast)).remove();
+          jQuery(jS.getTd(jS.i, i, colLast)).remove();
         }
         
         var w = jS.refreshLabelsColumns();
@@ -3072,7 +3100,7 @@ jQuery.sheet = {
         
         jS.offsetFormulas({
           row: 0,
-          col: jS.colLast
+          col: colLast
         }, {
           row: 0,
           col: -1
@@ -3082,7 +3110,13 @@ jQuery.sheet = {
         
         jS.evt.cellEditAbandon();
         
-        jS.trigger('deleteColumn', lastCol);
+        if(!socket){
+          args = [].slice.call(arguments)
+          args[2] = true;
+          s.socket.emit('message', { action:'jsheet_trigger', args:{fnName: 'deleteColumn', fnArgs: args} });
+        }
+
+        jS.trigger('deleteColumn', colLast);
       },
       sheetTab: function(get) { /* manages a tabs inner value
                       get: bool, makes return the current value of the tab;
@@ -4048,16 +4082,29 @@ jQuery.sheet = {
 
       jSS: {
         cell_active: function(data){
-          var td = jS.getTd(I,data.loc.row,data.loc.col);
-          var last_td = jS.getTd(I,data.last_row,data.last_col);
+          console.log('cell active socket rcd');
+          console.log(data.user);
+          var td = jS.getTd(data.sheet_idx,data.loc.row,data.loc.col);
+          var last_td = jS.getTd(data.sheet_idx,data.last_row,data.last_col);
           jQuery(last_td).css('background', '');
           jQuery(td).css('background', data.user.color);
         },
         cellEditDone: function(data){
-          var td = jS.getTd(I,data.cell.row,data.cell.col);
-          jS.createCell(I,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
+          console.log('cell edit done socket rcd');
+          console.log('user');
+          console.log(data.user);
+          var td = jS.getTd(data.sheet_idx,data.cell.row,data.cell.col);
+          jS.createCell(data.sheet_idx,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
           if(data.cell.formula){jQuery(td).attr('formula',data.cell.formula);}
           jS.calc();
+        },
+        control_factory_trigger: function(data){
+          console.log('trigger');
+          jS.controlFactory[data.fnName].apply(jS.controlFactory, data.fnArgs);
+        },
+        jsheet_trigger: function(data){
+          console.log('trigger');
+          jS[data.fnName].apply(jS, data.fnArgs);
         }
       }
     };
