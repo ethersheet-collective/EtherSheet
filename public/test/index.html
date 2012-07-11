@@ -12,6 +12,11 @@
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="/doc.cookie.js"></script>
   <script type="text/javascript" src="/helpers.js"></script>
+  <script type="text/javascript" src="/es/id.js"></script>
+  <script type="text/javascript" src="/es/cl.js"></script>
+  <script type="text/javascript" src="/es/fn.js"></script>
+  <script type="text/javascript" src="/es/msg.js"></script>
+  <script type="text/javascript" src="/jquery.es.js"></script>
   <script type="text/javascript" src="/ethersheet.js"></script>
 <!--/Required-->
   
@@ -40,17 +45,76 @@
 </head>
 <body>
   <div id="mocha"></div>
-  <div id="ethersheet"></div>
   <script>
+  /*
     mocha.setup({
       ui:'bdd',
       ignoreLeaks: true
     });
     var should = chai.Should();
+    */
   </script>
   <script src="/test/test_ethersheet.js"></script>
   <script>
-    mocha.run();
+    // mocha.run();
   </script>
+
+
+  <div id='disconnect-message'>
+    <div id='disconnect-text'>
+      You have been disconnected from the server, attempting to reconnect...
+      <br />
+      <img src="/images/ajax-loader.gif" alt='' />
+    </div>
+  </div>
+  
+  <div id="mainWrapper" class="ui-corner-all wrapper">
+    <div id="ethersheet" class="jQuerySheet" style="height: 100%;">
+      <div id='loading-text'>
+        Loading...
+        <br />
+        <img src="/images/ajax-loader.gif" alt='' />
+      </div>
+    </div>
+  </div>
+
+  <div id="inlineMenu" style="display: none;">
+    <span>
+      <a href="#" onclick="sheetInstance.controlFactory.addRow(); return false;" title="Insert Row After Selected">
+        <img alt="Insert Row After Selected" src="/images/sheet_row_add.png"/></a>
+      <a href="#" onclick="sheetInstance.deleteRow(); return false;" title="Delete Row">
+        <img alt="Delete Row" src="/images/sheet_row_delete.png"/></a>
+      <a href="#" onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Insert Column After Selected">
+        <img alt="Insert Column After Selected" src="/images/sheet_col_add.png"/></a>
+      <a href="#" onclick="sheetInstance.deleteColumn(); return false;" title="Delete Column">
+        <img alt="Delete Column" src="/images/sheet_col_delete.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleBold'); return false;" title="Bold">
+        <img alt="Bold" src="/images/text_bold.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleItalics'); return false;" title="Italic">
+        <img alt="Italic" src="/images/text_italic.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleUnderline', 'styleLineThrough'); return false;" title="Underline">
+        <img alt="Underline" src="/images/text_underline.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleLineThrough', 'styleUnderline'); return false;" title="Strikethrough">
+        <img alt="Strikethrough" src="/images/text_strikethrough.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleLeft', 'styleCenter styleRight'); return false;" title="Align Left">
+        <img alt="Align Left" src="/images/text_align_left.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleCenter', 'styleLeft styleRight'); return false;" title="Align Center">
+        <img alt="Align Center" src="/images/text_align_center.png"/></a>
+      <a href="#" onclick="sheetInstance.cellStyleToggle('styleRight', 'styleLeft styleCenter'); return false;" title="Align Right">
+        <img alt="Align Right" src="/images/text_align_right.png"/></a>
+      <span class="colorPickers">
+        <input title="Foreground color" class="colorPickerFont" style="background-image: url('images/palette.png') ! important; width: 24px; height: 24px;"/>
+        <input title="Background Color" class="colorPickerCell" style="background-image: url('images/palette_bg.png') ! important; width: 24px; height: 24px;"/>
+      </span>
+      <a href="#" onclick="sheetInstance.obj.formula().val('=HYPERLINK(\'' + prompt('Enter Web Address', 'https://www.ethersheet.org/') + '\')').keydown(); return false;" title="HyperLink">
+        <img alt="Web Link" src="/images/page_link.png"/></a>
+
+    </span>
+    <div id='user-menu-container'>
+      <div id='user-count'>1</div>
+    </div>
+  </div>
+  
+  <div id="footer" class="ui-corner-all"></div>  
 </body>
 </html>
