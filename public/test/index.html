@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethersheet Test Suite</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="/test/mocha.css" />
+<!--Required-->
+  <link rel="stylesheet" type="text/css" href="/jquery.sheet.css" />
+  <link rel="stylesheet" type="text/css" href="/jquery-ui/theme/jquery-ui.css" />
+  <script type="text/javascript" src="/jquery-1.5.2.js"></script>
+  <script type="text/javascript" src="/parser.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="/doc.cookie.js"></script>
+  <script type="text/javascript" src="/helpers.js"></script>
+  <script type="text/javascript" src="/ethersheet.js"></script>
+<!--/Required-->
+  
+<!--Optional-->
+  <!--ScrollTo-->
+  <script type="text/javascript" src="/plugins/jquery.scrollTo-min.js"></script>
+  <!--/ScrollTo-->
+  <!--jQuery UI-->
+  <script type="text/javascript" src="/jquery-ui/ui/jquery-ui.min.js"></script>
+  <!--/jQuery UI-->
+  <!--Raphaeljs - for charts-->
+  <script type="text/javascript" src="/plugins/raphael-min.js"></script>
+  <script type="text/javascript" src="/plugins/g.raphael-min.js"></script>
+  <!--/Raphaeljs-->
+  <!--ColorPicker-->
+  <link rel="stylesheet" type="text/css" href="/plugins/jquery.colorPicker.css" />
+  <script type="text/javascript" src="/plugins/jquery.colorPicker.min.js"></script>
+  <!--/ColorPicker-->
+  <!--Elastic-->
+  <script type="text/javascript" src="/plugins/jquery.elastic.min.js"></script>
+  <!--/Elastic-->
+  <link rel="stylesheet" type="text/css" href="/sheet.css" />  
+
+  <script src="/test/mocha.js"></script>
+  <script src="/test/chai.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <div id="ethersheet"></div>
+  <script>
+    mocha.setup({
+      ui:'bdd',
+      ignoreLeaks: true
+    });
+    var should = chai.Should();
+  </script>
+  <script src="/test/test_ethersheet.js"></script>
+  <script>
+    mocha.run();
+  </script>
+</body>
+</html>
