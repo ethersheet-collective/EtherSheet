@@ -1,5 +1,3 @@
-if(typeof ES == 'undefined') var ES = {};
-
 /* id's used my EtherSheet */
 ES.id = {
   autoFiller:     'jSheetAutoFiller',

@@ -1,10 +1,8 @@
-if(typeof ES == 'undefined') var ES = {};
-
 /**********************************
  * Socket Methods
  * These will be called based on socket messages coming in.
  * *******************************/
-var ES.engine = { //Calculations Engine
+ES.engine = { //Calculations Engine
   calc: function(tableI, spreadsheets, ignite, freshCalc) { //spreadsheets are array, [spreadsheet][row][cell], like A1 = o[0][0][0];
     for (var j = 0; j < spreadsheets.length; j++) {
       for (var k = 0; k < spreadsheets[j].length; k++) {
@@ -30,7 +28,7 @@ var ES.engine = { //Calculations Engine
     };
   },
   parseCellName: function(col, row){
-    return jSE.columnLabelString(col) + (row + 1);
+    return ES.engine.columnLabelString(col) + (row + 1);
   },
   columnLabelIndex: function(str) {
     // Converts A to 0, B to 1, Z to 25, AA to 26.
@@ -65,8 +63,8 @@ var ES.engine = { //Calculations Engine
     divide: function(x, y) { return x / y; },
     clean: function(v) {
       if (typeof(v) == 'string') {
-        v = v.replace(jSE.regEx.amp, '&')
-          .replace(jSE.regEx.nbsp, ' ')
+        v = v.replace(ES.engine.regEx.amp, '&')
+          .replace(ES.engine.regEx.nbsp, ' ')
           .replace(/\n/g,'')
           .replace(/\r/g,'');
       }

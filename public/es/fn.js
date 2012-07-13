@@ -1,5 +1,3 @@
-if(typeof ES == 'undefined') var ES = {};
-
 //standard functions used in spreadsheet expressions
 ES.fn = {
   VERSION: function() {

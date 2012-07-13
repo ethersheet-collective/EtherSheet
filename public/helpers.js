@@ -29,6 +29,21 @@ function goToObj(s){
   return false;
 }
 
+var time = { /* time loggin used with this.log, useful for finding out if new methods are faster */
+  now: new Date(),
+  last: new Date(),
+  diff: function() {
+    return Math.abs(Math.ceil(this.last.getTime() - this.now.getTime()) / 1000).toFixed(5);
+  },
+  set: function() {
+    this.last = this.now;
+    this.now = new Date();
+  },
+  get: function() {
+    return this.now.getHours() + ':' + this.now.getMinutes() + ':' + this.now.getSeconds();
+  }
+};
+
 var key = { /* key objects, makes it easier to develop */
   BACKSPACE:      8,
   CAPS_LOCK:      20,

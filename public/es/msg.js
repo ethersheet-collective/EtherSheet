@@ -1,5 +1,3 @@
-if(typeof ES == 'undefined') var ES = {};
-
 ES.msg = { /*msg = messages used throught sheet, for easy access to change them for other languages*/
   addRowMulti:      "How many rows would you like to add?",
   addColumnMulti:     "How many columns would you like to add?",

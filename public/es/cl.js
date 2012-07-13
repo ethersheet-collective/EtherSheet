@@ -1,5 +1,3 @@
-if(typeof ES == 'undefined') var ES = {};
-
 ES.cl = {
   /*
     cl = class references
