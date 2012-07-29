@@ -1,8 +1,10 @@
 var es;
-describe('EtherSheet', function(){
-  it('should create a new instance', function(){
-    es = new EtherSheet({
-      el: document.getElementById('ethersheet')
+
+$(function(){
+      es = new ES({
+        el: document.getElementById('ethersheet'),
+        buildSheet: '10x30',
+        height: window.innerHeight - 27,
+        width: window.innerWidth - 7,
+      });
     });
-  });
-});

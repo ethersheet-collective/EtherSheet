@@ -1,4 +1,5 @@
-ES.controlFactory: { /* controlFactory creates the different objects requied by sheet */
+/* controlFactory creates the different objects requied by sheet */
+jQuery.extend(ES.prototype,{ 
   addRowMulti: function(qty, isBefore, skipFormulaReparse) { /* creates multi rows
                         qty: int, the number of cells you'd like to add, if not specified, a dialog will ask; 
                         isBefore: bool, places cells before the selected cell if set to true, otherwise they will go after, or at end
@@ -9,7 +10,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     }
     if (qty) {
       if (!isNaN(qty))
-        /* jS */ ES.controlFactory.addCells(null, isBefore, null, parseInt(qty), 'row', skipFormulaReparse);
+        /* jS */ this.addCells(null, isBefore, null, parseInt(qty), 'row', skipFormulaReparse);
     }
   },
   addColumnMulti: function(qty, isBefore, skipFormulaReparse) { /* creates multi columns
@@ -22,7 +23,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     }
     if (qty) {
       if (!isNaN(qty))
-        /* jS */ ES.controlFactory.addCells(null, isBefore, null, parseInt(qty), 'col', skipFormulaReparse);
+        /* jS */ this.addCells(null, isBefore, null, parseInt(qty), 'col', skipFormulaReparse);
     }
   },
   addCells: function(eq, isBefore, eqO, qty, type, skipFormulaReparse) { /*creates cells for sheet and the bars that go along with them
@@ -34,7 +35,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
                               skipFormulaReparse: bool, re-parses formulas if needed
                           */
     //hide the autoFiller, it can get confused
-    if (s.autoFiller) {
+    if (this.s.autoFiller) {
       /* jS */ this.obj.autoFiller().hide();
     }
     
@@ -44,7 +45,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     var sheet = /* jS */ this.obj.sheet();
     var sheetWidth = sheet.width();
     
-    ///* jS */ this.evt.cellEditAbandon();
+    ///* jS */ this.cellEditAbandon();
     
     qty = (qty ? qty : 1);
     type = (type ? type : 'col');
@@ -72,7 +73,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
             return sheet.find('tr' + eq);
           },
           col: function() { return ''; },
-          newBar: '<div class="' + ES.cl.uiBar + '" style="height: ' + (s.colMargin - s.boxModelCorrection) + 'px;" />',
+          newBar: '<div class="' + ES.cl.uiBar + '" style="height: ' + (this.s.colMargin - this.s.boxModelCorrection) + 'px;" />',
           size: function() {
             return /* jS */ this.getTdLocation(o.cells().find('td:last'));
           },
@@ -87,7 +88,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
               newCells += '<td />';
             }
             
-            return '<tr style="height: ' + s.colMargin + 'px;">' + newCells + '</tr>';
+            return '<tr style="height: ' + this.s.colMargin + 'px;">' + newCells + '</tr>';
           },
           newCol: '',
           reLabel: function() {               
@@ -96,7 +97,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
             });
           },
           dimensions: function(bar, cell, col) {
-            bar.height(cell.height(s.colMargin).outerHeight() - s.boxModelCorrection);
+            bar.height(cell.height(this.s.colMargin).outerHeight() - this.s.boxModelCorrection);
           },
           offset: {row: qty,col: 0}
         };
@@ -138,14 +139,14 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
             });
           },
           dimensions: function(bar, cell, col) {                
-            var w = s.newColumnWidth;
+            var w = this.s.newColumnWidth;
             col
               .width(w)
               .css('width', w + 'px')
               .attr('width', w + 'px');
             
             bar
-              .width(w - s.boxModelCorrection);
+              .width(w - this.s.boxModelCorrection);
             
             sheet.width(sheetWidth + (w * qty));
           },
@@ -213,11 +214,11 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
                       */
     //socket                  
     console.log('addrow at ' + atRow)
-    /* jS */ ES.controlFactory.addCells(atRow, isBefore, atRowQ, 1, 'row');
+    /* jS */ this.addCells(atRow, isBefore, atRowQ, 1, 'row');
     if(!socket){
       args = [].slice.call(arguments)
       args[3] = true;
-      s.socket.emit('message', { action:'control_factory_trigger', args:{fnName: 'addRow', fnArgs: args} });
+      this.s.socket.emit('message', { action:'control_factory_trigger', args:{fnName: 'addRow', fnArgs: args} });
     }
     /* jS */ this.trigger('addRow', [atRow, isBefore, atRowQ, 1]);
   },
@@ -226,11 +227,11 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
                         isBefore: bool, places cells before the selected cell if set to true, otherwise they will go after, or at end
                       */
                       //socket
-    /* jS */ ES.controlFactory.addCells(atColumn, isBefore, atColumnQ, 1, 'col');
+    /* jS */ this.addCells(atColumn, isBefore, atColumnQ, 1, 'col');
     if(!socket){
       args = [].slice.call(arguments)
       args[3] = true;
-      s.socket.emit('message', { action:'control_factory_trigger', args:{fnName: 'addColumn', fnArgs: args} });
+      this.s.socket.emit('message', { action:'control_factory_trigger', args:{fnName: 'addColumn', fnArgs: args} });
     }
     /* jS */ this.trigger('addColumn', [atRow, isBefore, atRowQ, 1]);
   },
@@ -238,19 +239,20 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
                         reloadHeights: bool, reloads all the heights of each bar from the cells of the sheet;
                         o: object, the table/spreadsheeet object
                     */
+    var es = this;
     /* jS */ this.obj.barLeft().remove();
     var barLeft = jQuery('<div border="1px" id="' + ES.id.barLeft + /* jS */ this.i + '" class="' + ES.cl.barLeft + '" />');
     var heightFn;
     if (reloadHeights) { //This is our standard way of detecting height when a sheet loads from a url
       heightFn = function(i, objSource, objBar) {
-        objBar.height(parseInt(objSource.outerHeight()) - s.boxModelCorrection);
+        objBar.height(parseInt(objSource.outerHeight()) - es.s.boxModelCorrection);
       };
     } else { //This way of detecting height is used becuase the object has some problems getting
         //height because both tr and td have height set
         //This corrects the problem
         //This is only used when a sheet is already loaded in the pane
       heightFn = function(i, objSource, objBar) {
-        objBar.height(parseInt(objSource.css('height').replace('px','')) - s.boxModelCorrection);
+        objBar.height(parseInt(objSource.css('height').replace('px','')) - es.s.boxModelCorrection);
       };
     }
     
@@ -260,7 +262,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       heightFn(i, jQuery(this), child);
     });
     
-    /* jS */ this.evt.barMouseDown.height(
+    /* jS */ this.barMouseDown_height(
       /* jS */ this.obj.barLeftParent().append(barLeft)
     );
   },
@@ -268,9 +270,10 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
                         reloadWidths: bool, reloads all the widths of each bar from the cells of the sheet;
                         o: object, the table/spreadsheeet object
                     */
+    var es = this;
     /* jS */ this.obj.barTop().remove();
     var barTop = jQuery('<div id="' + ES.id.barTop + /* jS */ this.i + '" class="' + ES.cl.barTop + '" />');
-    barTop.height(s.colMargin);
+    barTop.height(this.s.colMargin);
     
     var parents;
     var widthFn;
@@ -278,13 +281,13 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     if (reloadWidths) {
       parents = o.find('tr:first').children();
       widthFn = function(obj) {
-        return /* jS */ this.attrH.width(obj);
+        return /* jS */ es.width(obj);
       };
     } else {
       parents = o.find('col');
       widthFn = function(obj) {
 
-        return parseInt(jQuery(obj).css('width').replace('px','')) - s.boxModelCorrection;
+        return parseInt(jQuery(obj).css('width').replace('px','')) - es.s.boxModelCorrection;
       };
     }
     
@@ -294,12 +297,12 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       
       var child = jQuery("<div>" + v + "</div>")
         .width(w)
-        .height(s.colMargin);
+        .height(es.s.colMargin);
       barTop.append(child);
     });
     
-    /* jS */ this.evt.barMouseDown.width(
-      /* jS */ this.obj.barTopParent().append(barTop)
+    /* jS */ this.barMouseDown_width(
+      /* jS */ es.obj.barTopParent().append(barTop)
     );
   },
   barTopHandle: function(bar, i) {
@@ -312,7 +315,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     var pos = target.position();
 
     var barTopHandle = jQuery('<div id="' + ES.id.barTopHandle + '" class="' + ES.cl.uiBarTopHandle + ' ' + ES.cl.barHelper + ' ' + ES.cl.barTopHandle + '" />')
-      .height(s.colMargin - 2)
+      .height(this.s.colMargin - 2)
       .css('left', pos.left + 'px')
       .appendTo(bar);
     
@@ -336,8 +339,8 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     var pos = target.position();
 
     var barLeftHandle = jQuery('<div id="' + ES.id.barLeftHandle + '" class="' + ES.cl.uiBarLeftHandle + ' ' + ES.cl.barHelper + ' ' + ES.cl.barLeftHandle + '" />')
-      .width(s.colMargin - 6)
-      .height(s.colMargin / 3)
+      .width(this.s.colMargin - 6)
+      .height(this.s.colMargin / 3)
       .css('top', pos.top + 'px')
       .appendTo(bar);
     
@@ -380,7 +383,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     }
     
     menu
-      .width(s.newColumnWidth)
+      .width(this.s.newColumnWidth)
       .mouseleave(function() {
         menu.hide();
       })
@@ -401,22 +404,22 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     var menu;
     
     if (!menu.length) {
-      menu = /* jS */ ES.controlFactory.makeMenu('top', [{
+      menu = /* jS */ this.makeMenu('top', [{
         msg: ES.msg.menuInsertColumnAfter,
         fn: function(){
-          /* jS */ ES.controlFactory.addColumn(/* jS */ this.cellLast.col);
+          /* jS */ this.addColumn(/* jS */ this.cellLast.col);
           return false;
         }
       }, {
         msg: ES.msg.menuInsertColumnBefore,
         fn: function(){
-          /* jS */ ES.controlFactory.addColumn(/* jS */ this.cellLast.col, true);
+          /* jS */ this.addColumn(/* jS */ this.cellLast.col, true);
           return false;
         }
       }, {
         msg: ES.msg.menuAddColumnEnd,
         fn: function(){
-          /* jS */ ES.controlFactory.addColumn(':last');
+          /* jS */ this.addColumn(':last');
           return false;
         }
       }, {
@@ -451,14 +454,14 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
           var offset = barTopMenuParent.offset();
           
           menu
-            .css('left', (offset.left - (s.newColumnWidth - s.colMargin)) + 'px')
-            .css('top', (offset.top + (s.colMargin * .8)) + 'px')
+            .css('left', (offset.left - (this.s.newColumnWidth - this.s.colMargin)) + 'px')
+            .css('top', (offset.top + (this.s.colMargin * .8)) + 'px')
             .show();
         })
         .blur(function() {
           if (menu) menu.hide();
         })
-        .height(s.colMargin);
+        .height(this.s.colMargin);
     }
     
     barTopMenuParent
@@ -475,22 +478,22 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     menu = /* jS */ this.obj.barLeftMenu();
     
     if (!menu.length) {
-      menu = /* jS */ ES.controlFactory.makeMenu('left', [{
+      menu = /* jS */ this.makeMenu('left', [{
           msg: ES.msg.menuInsertRowAfter,
           fn: function(){
-            /* jS */ ES.controlFactory.addRow(/* jS */ this.cellLast.row); // we really need to pass in the row here
+            /* jS */ this.addRow(/* jS */ this.cellLast.row); // we really need to pass in the row here
             return false;
           }
         }, {
           msg: ES.msg.menuInsertRowBefore,
           fn: function(){
-            /* jS */ ES.controlFactory.addRow(/* jS */ this.cellLast.row, true); // we really need to pass in the row here
+            /* jS */ this.addRow(/* jS */ this.cellLast.row, true); // we really need to pass in the row here
             return false;
           }
         }, {
           msg: ES.msg.menuAddRowEnd,
           fn: function(){
-            /* jS */ ES.controlFactory.addRow(':last');
+            /* jS */ this.addRow(':last');
             return false;
           }
         }, {
@@ -514,22 +517,22 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     var menu = /* jS */ this.obj.cellMenu();
     
     if (!menu.length) {
-      menu = /* jS */ ES.controlFactory.makeMenu('cell', [{
+      menu = /* jS */ this.makeMenu('cell', [{
           msg: ES.msg.menuInsertColumnAfter,
           fn: function(){
-            /* jS */ ES.controlFactory.addColumn(/* jS */ this.cellLast.col);
+            /* jS */ this.addColumn(/* jS */ this.cellLast.col);
             return false;
           }
         }, {
           msg: ES.msg.menuInsertColumnBefore,
           fn: function(){
-            /* jS */ ES.controlFactory.addColumn(/* jS */ this.cellLast.col, true);
+            /* jS */ this.addColumn(/* jS */ this.cellLast.col, true);
             return false;
           }
         }, {
           msg: ES.msg.menuAddColumnEnd,
           fn: function(){
-            /* jS */ ES.controlFactory.addColumn(':last');
+            /* jS */ this.addColumn(':last');
             return false;
           }
         }, {
@@ -543,19 +546,19 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
         },{
           msg: ES.msg.menuInsertRowAfter,
           fn: function(){
-            /* jS */ ES.controlFactory.addRow(/* jS */ this.cellLast.row);
+            /* jS */ this.addRow(/* jS */ this.cellLast.row);
             return false;
           }
         }, {
           msg: ES.msg.menuInsertRowBefore,
           fn: function(){
-            /* jS */ ES.controlFactory.addRow(/* jS */ this.cellLast.row, true);
+            /* jS */ this.addRow(/* jS */ this.cellLast.row, true);
             return false;
           }
         }, {
           msg: ES.msg.menuAddRowEnd,
           fn: function(){
-            /* jS */ ES.controlFactory.addRow(':last');
+            /* jS */ this.addRow(':last');
             return false;
           }
         }, {
@@ -585,6 +588,8 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       .show();
   },
   header: function() { /* creates the control/container for everything above the spreadsheet */
+    var es = this;
+
     /* jS */ this.obj.controls().remove();
     /* jS */ this.obj.tabContainer().remove();
     
@@ -593,22 +598,22 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     var firstRow = jQuery('<table cellpadding="0" cellspacing="0" border="0"><tr /></table>').prependTo(header);
     var firstRowTr = jQuery('<tr />');
     
-    if (s.title) {
+    if (this.s.title) {
       var title;
-      if (jQuery.isFunction(s.title)) {
+      if (jQuery.isFunction(this.s.title)) {
         title = /* jS */ this.title(jS);
       } else {
-        title = s.title;
+        title = this.s.title;
       }
       firstRowTr.append(jQuery('<td id="' + ES.id.title + '" class="' + ES.cl.title + '" />').html(title));
     }
     
-    if (s.inlineMenu && /* jS */ this.isSheetEditable()) {
+    if (this.s.inlineMenu && /* jS */ this.isSheetEditable()) {
       var inlineMenu;
-      if (jQuery.isFunction(s.inlineMenu)) {
-        inlineMenu = s.inlineMenu(jS);
+      if (jQuery.isFunction(this.s.inlineMenu)) {
+        inlineMenu = this.s.inlineMenu(jS);
       } else {
-        inlineMenu = s.inlineMenu;
+        inlineMenu = this.s.inlineMenu;
       }
       firstRowTr.append(jQuery('<td id="' + ES.id.inlineMenu + '" class="' + ES.cl.inlineMenu + '" />').html(inlineMenu));
     }
@@ -642,10 +647,10 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
         return menu;
       }
       
-      if (s.menu) {
-        makeMenu(s.menu);
+      if (this.s.menu) {
+        makeMenu(this.s.menu);
       } else {
-        jQuery('<div />').load(s.urlMenu, function() {
+        jQuery('<div />').load(this.s.urlMenu, function() {
           makeMenu(jQuery(this).html());
         });
       }
@@ -661,22 +666,22 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
         '</table>')
         .appendTo(header)
         .find('textarea')
-          .keydown(/* jS */ this.evt.keyDownHandler.formulaKeydown)
+          .keydown(/* jS */ es.keyDownHandler_formulaKeydown)
           .keyup(function() {
-            /* jS */ this.obj.inPlaceEdit().val(/* jS */ this.obj.formula().val());
+            /* jS */ es.obj.inPlaceEdit().val(/* jS */ this.obj.formula().val());
           })
           .change(function() {
-            /* jS */ this.obj.inPlaceEdit().val(/* jS */ this.obj.formula().val());
+            /* jS */ es.obj.inPlaceEdit().val(/* jS */ this.obj.formula().val());
           })
-          .bind('paste', /* jS */ this.evt.pasteOverCells)
+          .bind('paste', /* jS */ this.pasteOverCells)
           .focus(function() {
-            /* jS */ this.setNav(false);
+            /* jS */ es.setNav(false);
           })
           .focusout(function() {
-            /* jS */ this.setNav(true);
+            /* jS */ es.setNav(true);
           })
           .blur(function() {
-            /* jS */ this.setNav(true);
+            /* jS */ es.setNav(true);
           });
       
       jQuery(ES.instance).each(function() {
@@ -687,18 +692,18 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       
       jQuery(document)
         .unbind('keydown')
-        .keydown(/* jS */ this.evt.keyDownHandler.documentKeydown);
+        .keydown(/* jS */ this.keyDownHandler_documentKeydown);
     }
     
     firstRowTr.appendTo(firstRow);
     
     var tabParent = jQuery('<div id="' + ES.id.tabContainer + '" class="' + ES.cl.tabContainer + '" />')
       .mousedown(function(e) {
-        /* jS */ this.trigger('switchSpreadsheet', [jQuery(e.target).attr('i') * 1]);
+        /* jS */ es.trigger('switchSpreadsheet', [jQuery(e.target).attr('i') * 1]);
         return false;
       })
       .dblclick(function(e) {
-        /* jS */ this.trigger('renameSpreadsheet', [jQuery(e.target).attr('i') * 1]);
+        /* jS */ es.trigger('renameSpreadsheet', [jQuery(e.target).attr('i') * 1]);
         return 
       });
     
@@ -718,10 +723,10 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
           cancel: 'span[i="-1"]',
           start: function(e, ui) {
             startPosition = ui.item.index();
-            /* jS */ this.trigger('tabSortstart', [e, ui]);
+            /* jS */ es.trigger('tabSortstart', [e, ui]);
           },
           update: function(e, ui) {
-            /* jS */ this.trigger('tabSortupdate', [e, ui, startPosition]);
+            /* jS */ es.trigger('tabSortupdate', [e, ui, startPosition]);
           }
         });
       }
@@ -729,7 +734,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       jQuery('<span />').appendTo(tabParent);
     }
 
-    s.parent
+    this.s.parent
       .html('')
       .append(header) //add controls header
       .append('<div id="' + ES.id.ui + '" class="' + ES.cl.ui + '">') //add spreadsheet control
@@ -741,6 +746,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
                         fn: function, called after the spreadsheet is created and tuned for use;
                         reloadBars: bool, if set to true reloads id bars on top and left;
                       */
+    var es = this;
     if (!i) {
       /* jS */ this.sheetCount = 0;
       /* jS */ this.i = 0;
@@ -754,17 +760,17 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
     
     /* jS */ this.readOnly[i] = o.hasClass('readonly');
     
-    var objContainer = /* jS */ ES.controlFactory.table().appendTo(/* jS */ this.obj.ui());
+    var objContainer = /* jS */ this.table().appendTo(/* jS */ this.obj.ui());
     var pane = /* jS */ this.obj.pane().html(o);
     
-    if (s.autoFiller && /* jS */ this.isSheetEditable()) {
-      pane.append(/* jS */ ES.controlFactory.autoFiller());
+    if (this.s.autoFiller && /* jS */ this.isSheetEditable()) {
+      pane.append(/* jS */ this.autoFiller());
     }
           
     /* jS */ this.sheetDecorate(o);
     
-    /* jS */ ES.controlFactory.barTop(reloadBars, o);
-    /* jS */ ES.controlFactory.barLeft(reloadBars, o);
+    /* jS */ this.barTop(reloadBars, o);
+    /* jS */ this.barLeft(reloadBars, o);
   
     /* jS */ this.sheetTab(true);
     
@@ -772,26 +778,26 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       var formula = /* jS */ this.obj.formula();
       pane
         .mousedown(function(e) {
-          if (/* jS */ this.isTd(e.target)) {
-              /* jS */ this.evt.cellOnMouseDown(e);
+          if (/* jS */ es.isTd(e.target)) {
+              /* jS */ es.cellOnMouseDown(e);
               return false;
             }
         })
         .bind('contextmenu', function(e) {
-          /* jS */ ES.controlFactory.cellMenu(e);
+          /* jS */ es.cellMenu(e);
           return false;
         })
         .disableSelectionSpecial()
-        .dblclick(/* jS */ this.evt.cellOnDblClick);
+        .dblclick(/* jS */ this.cellOnDblClick);
     }
     
-    /* jS */ this.themeRoller.start(i);
+    /* jS */ this.start(i);
 
     /* jS */ this.setTdIds(o, /* jS */ this.i);
     
     /* jS */ this.checkMinSize(o);
     
-    /* jS */ this.evt.scrollBars(pane);
+    /* jS */ this.scrollBars(pane);
     
     /* jS */ this.addTab();
     
@@ -808,7 +814,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       '<tbody>' +
         '<tr>' + 
           '<td id="' + ES.id.barCornerParent + /* jS */ this.i + '" class="' + ES.cl.barCornerParent + '">' + //corner
-            '<div style="height: ' + s.colMargin + '; width: ' + s.colMargin + ';" id="' + ES.id.barCorner + /* jS */ this.i + '" class="' + ES.cl.barCorner +'"' + (/* jS */ this.isSheetEditable() ? ' onClick="ES.instance[' + I + '].cellSetActiveBar(\'all\');"' : '') + ' title="Select All">&nbsp;</div>' +
+            '<div style="height: ' + this.s.colMargin + '; width: ' + this.s.colMargin + ';" id="' + ES.id.barCorner + /* jS */ this.i + '" class="' + ES.cl.barCorner +'"' + (/* jS */ this.isSheetEditable() ? ' onClick="ES.instance[' + I + '].cellSetActiveBar(\'all\');"' : '') + ' title="Select All">&nbsp;</div>' +
           '</td>' + 
           '<td class="' + ES.cl.barTopTd + '">' + //barTop
             '<div id="' + ES.id.barTopParent + /* jS */ this.i + '" class="' + ES.cl.barTopParent + '"></div>' +
@@ -816,7 +822,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
         '</tr>' +
         '<tr>' +
           '<td class="' + ES.cl.barLeftTd + '">' + //barLeft
-            '<div style="width: ' + s.colMargin + ';" id="' + ES.id.barLeftParent + /* jS */ this.i + '" class="' + ES.cl.barLeftParent + '"></div>' +
+            '<div style="width: ' + this.s.colMargin + ';" id="' + ES.id.barLeftParent + /* jS */ this.i + '" class="' + ES.cl.barLeftParent + '"></div>' +
           '</td>' +
           '<td class="' + ES.cl.sheetPaneTd + '">' + //pane
             '<div id="' + ES.id.pane + /* jS */ this.i + '" class="' + ES.cl.pane + '"></div>' +
@@ -835,7 +841,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       .load(function() { //prevent the image from being too big for the row
         jQuery(this).fadeIn(function() {
           jQuery(this).addClass('safeImg');
-          /* jS */ this.attrH.setHeight(parseInt(row), 'cell', false);
+          /* jS */ this.setHeight(parseInt(row), 'cell', false);
         });
       })
       .attr('src', src);
@@ -855,7 +861,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       .css('top', offset.top)
       .width(w)
       .height(h)
-      .keydown(/* jS */ this.evt.inPlaceEditOnKeyDown)
+      .keydown(/* jS */ this.inPlaceEditOnKeyDown)
       .keyup(function() {
         formula.val(textarea.val());
       })
@@ -871,7 +877,7 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
       .blur(function() {
         /* jS */ this.setNav(true);
       })
-      .bind('paste', /* jS */ this.evt.pasteOverCells)
+      .bind('paste', /* jS */ this.pasteOverCells)
       .appendTo('body')
       .val(formula.val())
       .focus()
@@ -901,4 +907,4 @@ ES.controlFactory: { /* controlFactory creates the different objects requied by 
           }
         });
   }
-};
+});

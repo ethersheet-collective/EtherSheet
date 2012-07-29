@@ -1,5 +1,5 @@
-ES.exportSheet = { /* exports sheets into xml, json, or html formats */
-  xml: function (skipCData) {
+jQuery.extend(ES.prototype,{ /* exports sheets into xml, json, or html formats */
+  exportSheet_xml: function (skipCData) {
     var sheetClone = /* jS */ this.sheetDecorateRemove(true);      
     var document = "";
     
@@ -65,7 +65,7 @@ ES.exportSheet = { /* exports sheets into xml, json, or html formats */
     return '<documents>' + document + '</documents>';
   },
   
-  json: function() {
+  exportSheet_json: function() {
     var sheetClone = /* jS */ this.sheetDecorateRemove(true);
     var documents = []; //documents
     
@@ -119,7 +119,7 @@ ES.exportSheet = { /* exports sheets into xml, json, or html formats */
     return documents;
   },
 
-  html: function() {
+  exportSheet_html: function() {
     return /* jS */ this.sheetDecorateRemove(true);
   }
-};
+});

@@ -1,5 +1,5 @@
 //standard functions used in spreadsheet expressions
-ES.fn = {
+jQuery.extend(ES.prototype,{
   VERSION: function() {
     return this.jS.version;
   },
@@ -9,10 +9,10 @@ ES.fn = {
   },
   AVERAGE:  function(values) { 
     var arr = arrHelpers.foldPrepare(values, arguments);
-    return ES.fn.SUM(arr) / ES.fn.COUNT(arr); 
+    return this.SUM(arr) / this.COUNT(arr); 
   },
   AVG:    function(values) { 
-    return ES.fn.AVERAGE(values);
+    return this.AVERAGE(values);
   },
   COUNT:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.count, 0); },
   COUNTA:   function() {
@@ -25,16 +25,16 @@ ES.fn = {
     }
     return count;
   },
-  SUM:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.sum, 0, true, ES.fn.N); },
-  MAX:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.max, Number.MIN_VALUE, true, ES.fn.N); },
-  MIN:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.min, Number.MAX_VALUE, true, ES.fn.N); },
+  SUM:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.sum, 0, true, this.N); },
+  MAX:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.max, Number.MIN_VALUE, true, this.N); },
+  MIN:    function(values) { return arrHelpers.fold(arrHelpers.foldPrepare(values, arguments), jSE.cFN.min, Number.MAX_VALUE, true, this.N); },
   MEAN:   function(values) { return this.SUM(values) / values.length; },
-  ABS :     function(v) { return Math.abs(ES.fn.N(v)); },
-  CEILING:  function(v) { return Math.ceil(ES.fn.N(v)); },
-  FLOOR:    function(v) { return Math.floor(ES.fn.N(v)); },
-  INT:    function(v) { return Math.floor(ES.fn.N(v)); },
+  ABS :     function(v) { return Math.abs(this.N(v)); },
+  CEILING:  function(v) { return Math.ceil(this.N(v)); },
+  FLOOR:    function(v) { return Math.floor(this.N(v)); },
+  INT:    function(v) { return Math.floor(this.N(v)); },
   ROUND:    function(v, decimals) {
-    return ES.fn.FIXED(v, (decimals ? decimals : 0), false);
+    return this.FIXED(v, (decimals ? decimals : 0), false);
   },
   RAND:     function() { return Math.random(); },
   RND:    function() { return Math.random(); },
@@ -64,7 +64,7 @@ ES.fn = {
       decimals = 2;
     }
     var x = Math.pow(10, decimals);
-    var n = String(Math.round(ES.fn.N(v) * x) / x); 
+    var n = String(Math.round(this.N(v) * x) / x); 
     var p = n.indexOf('.');
     if (p < 0) {
       p = n.length;
@@ -123,7 +123,7 @@ ES.fn = {
       symbol = '$';
     }
     
-    var r = ES.fn.FIXED(v, decimals, false);
+    var r = this.FIXED(v, decimals, false);
     
     if (v >= 0) {
       this.cell.html = symbol + r;
@@ -350,4 +350,4 @@ ES.fn = {
     });
     return "";
   }
-};
+});

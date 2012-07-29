@@ -1,4 +1,5 @@
-require('../../app');
+var config = require('../config-test.js');
+var server = require('../../lib/server').createServer(config);
 var webdriverjs = require("webdriverjs");
 var client1 = webdriverjs.remote();
 var client2 = webdriverjs.remote();

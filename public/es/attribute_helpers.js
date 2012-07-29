@@ -1,18 +1,19 @@
-ES.attrH = {/* Attribute Helpers
-      I created this object so I could see, quickly, which attribute was most stable.
-      As it turns out, all browsers are different, thus this has evolved to a much uglier beast
-    */
+/* Attribute Helpers
+  I created this object so I could see, quickly, which attribute was most stable.
+  As it turns out, all browsers are different, thus this has evolved to a much uglier beast
+*/
+jQuery.extend(ES.prototype,{
   width: function(o, skipCorrection) {
-    return jQuery(o).outerWidth() - (skipCorrection ? 0 : s.boxModelCorrection);
+    return jQuery(o).outerWidth() - (skipCorrection ? 0 : this.s.boxModelCorrection);
   },
   widthReverse: function(o, skipCorrection) {
-    return jQuery(o).outerWidth() + (skipCorrection ? 0 : s.boxModelCorrection);
+    return jQuery(o).outerWidth() + (skipCorrection ? 0 : this.s.boxModelCorrection);
   },
   height: function(o, skipCorrection) {
-    return jQuery(o).outerHeight() - (skipCorrection ? 0 : s.boxModelCorrection);
+    return jQuery(o).outerHeight() - (skipCorrection ? 0 : this.s.boxModelCorrection);
   },
   heightReverse: function(o, skipCorrection) {
-    return jQuery(o).outerHeight() + (skipCorrection ? 0 : s.boxModelCorrection);
+    return jQuery(o).outerHeight() + (skipCorrection ? 0 : this.s.boxModelCorrection);
   },
   syncSheetWidthFromTds: function(o) {
     var w = 0;
@@ -31,7 +32,7 @@ ES.attrH = {/* Attribute Helpers
     switch(from) {
       case 'cell':
         o = (o ? o : /* jS */ this.obj.barLeft().children().eq(i));
-        h = /* jS */ ES.attrH.height(jQuery(/* jS */ this.getTd(/* jS */ this.i, i, 0)).parent().andSelf(), skipCorrection);
+        h = /* jS */ this.height(jQuery(/* jS */ this.getTd(/* jS */ this.i, i, 0)).parent().andSelf(), skipCorrection);
         break;
       case 'bar':
         if (!o) {
@@ -39,7 +40,7 @@ ES.attrH = {/* Attribute Helpers
           var td = tr.children();
           o = tr.add(td);
         } 
-        h = /* jS */ ES.attrH.heightReverse(/* jS */ this.obj.barLeft().children().eq(i), skipCorrection);
+        h = /* jS */ this.heightReverse(/* jS */ this.obj.barLeft().children().eq(i), skipCorrection);
         break;
     }
     
@@ -52,4 +53,4 @@ ES.attrH = {/* Attribute Helpers
 
     return o;
   }
-};
+});

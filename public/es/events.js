@@ -1,109 +1,110 @@
-ES.evt: { /* event handlers for sheet; e = event */
-  keyDownHandler: {
-    enterOnInPlaceEdit: function(e) {
-      if (!e.shiftKey) {
-        return /* jS */ ES.evt.cellSetFocusFromKeyCode(e);
-      } else {
-        return true;
-      }
-    },
-    enter: function(e) {
-      if (!/* jS */ this.cellLast.isEdit && !e.ctrlKey) {
-        /* jS */ this.cellLast.td.dblclick();
-        return false;
-      } else {
-        return this.enterOnInPlaceEdit(e);
-      }
-    },
-    tab: function(e) {
-      return /* jS */ ES.evt.cellSetFocusFromKeyCode(e);
-    },
-    findCell: function(e) {
-      if (e.ctrlKey) { 
-        /* jS */ this.cellFind();
-        return false;
-      }
-      return true;
-    },
-    redo: function(e) {
-      if (e.ctrlKey && !/* jS */ this.cellLast.isEdit) { 
-        /* jS */ this.cellUndoable.undoOrRedo();
-        return false;
-      }
-      return true;
-    },
-    undo: function(e) {
-      if (e.ctrlKey && !/* jS */ this.cellLast.isEdit) {
-        /* jS */ this.cellUndoable.undoOrRedo(true);
-        return false;
-      }
-      return true;
-    },
-    pageUpDown: function(reverse) {
-      var pane = /* jS */ this.obj.pane();
-      var left = /* jS */ this.cellLast.td.position().left;
-      var top = 0;
-      
-      if (reverse) {
-        top = 0;
-        pane.scrollTop(pane.scrollTop() - pane.height());
-        
-      } else {
-        top = pane.height() - (s.colMargin * 3);
-        pane.scrollTop(pane.scrollTop() + top);
+/* event handlers for sheet; e = event */
+jQuery.extend(ES.prototype,{  
 
-      }
-      
-      return /* jS */ ES.evt.cellSetFocusFromXY(left, top);
-    },
-    formulaKeydown: function(e) {
-      switch (e.keyCode) {
-        case key.ESCAPE:  /* jS */ ES.evt.cellEditAbandon();
-          break;
-        case key.ENTER:   /* jS */ ES.evt.cellSetFocusFromKeyCode(e); return false;
-          break;              
-        default:      /* jS */ this.cellLast.isEdit = true;
-      }
-    },
-    documentKeydown: function(e) {
-      if (/* jS */ this.nav) {
-        switch (e.keyCode) {
-          case key.TAB:     /* jS */ ES.evt.keyDownHandler.tab(e);
-            break;
-          case key.ENTER:
-          case key.LEFT:
-          case key.UP:
-          case key.RIGHT:
-          case key.DOWN:    (e.shiftKey ? /* jS */ ES.evt.cellSetHighlightFromKeyCode(e) : /* jS */ ES.evt.cellSetFocusFromKeyCode(e));
-            break;
-          case key.PAGE_UP: /* jS */ ES.evt.keyDownHandler.pageUpDown(true);
-            break;
-          case key.PAGE_DOWN: /* jS */ ES.evt.keyDownHandler.pageUpDown();
-            break;
-          case key.HOME:
-          case key.END:   /* jS */ ES.evt.cellSetFocusFromKeyCode(e);
-            break;
-          case key.V:   /* jS */ ES.evt.pasteOverCells(e);
-            break;
-          case key.Y:   /* jS */ ES.evt.keyDownHandler.redo(e);
-            break;
-          case key.Z:   /* jS */ ES.evt.keyDownHandler.undo(e);
-            break;
-          case key.ESCAPE:  /* jS */ ES.evt.cellEditAbandon();
-            break;
-          case key.F:   /* jS */ ES.evt.keyDownHandler.findCell(e);
-            break;
-          case key.CONTROL: //we need to filter these to keep cell state
-          case key.CAPS_LOCK:
-          case key.SHIFT:
-          case key.ALT:
-            break;
-          default:    /* jS */ this.obj.cellActive().dblclick(); return true;
-        }
-        return false;
-      }
+  keyDownHandler_enterOnInPlaceEdit: function(e) {
+    if (!e.shiftKey) {
+      return /* jS */ this.cellSetFocusFromKeyCode(e);
+    } else {
+      return true;
     }
   },
+  keyDownHandler_enter: function(e) {
+    if (!/* jS */ this.cellLast.isEdit && !e.ctrlKey) {
+      /* jS */ this.cellLast.td.dblclick();
+      return false;
+    } else {
+      return this.keyDownHandler_enterOnInPlaceEdit(e);
+    }
+  },
+  keyDownHandler_tab: function(e) {
+    return /* jS */ this.cellSetFocusFromKeyCode(e);
+  },
+  keyDownHandler_findCell: function(e) {
+    if (e.ctrlKey) { 
+      /* jS */ this.cellFind();
+      return false;
+    }
+    return true;
+  },
+  keyDownHandler_redo: function(e) {
+    if (e.ctrlKey && !/* jS */ this.cellLast.isEdit) { 
+      /* jS */ this.cellUndoable.undoOrRedo();
+      return false;
+    }
+    return true;
+  },
+  keyDownHandler_undo: function(e) {
+    if (e.ctrlKey && !/* jS */ this.cellLast.isEdit) {
+      /* jS */ this.cellUndoable.undoOrRedo(true);
+      return false;
+    }
+    return true;
+  },
+  keyDownHandler_pageUpDown: function(reverse) {
+    var pane = /* jS */ this.obj.pane();
+    var left = /* jS */ this.cellLast.td.position().left;
+    var top = 0;
+    
+    if (reverse) {
+      top = 0;
+      pane.scrollTop(pane.scrollTop() - pane.height());
+      
+    } else {
+      top = pane.height() - (s.colMargin * 3);
+      pane.scrollTop(pane.scrollTop() + top);
+
+    }
+    
+    return /* jS */ this.cellSetFocusFromXY(left, top);
+  },
+  keyDownHandler_formulaKeydown: function(e) {
+    switch (e.keyCode) {
+      case key.ESCAPE:  /* jS */ this.cellEditAbandon();
+        break;
+      case key.ENTER:   /* jS */ this.cellSetFocusFromKeyCode(e); return false;
+        break;              
+      default:      /* jS */ this.cellLast.isEdit = true;
+    }
+  },
+  keyDownHandler_documentKeydown: function(e) {
+    if (/* jS */ this.nav) {
+      switch (e.keyCode) {
+        case key.TAB:     /* jS */ this.keyDownHandler_tab(e);
+          break;
+        case key.ENTER:
+        case key.LEFT:
+        case key.UP:
+        case key.RIGHT:
+        case key.DOWN:    (e.shiftKey ? /* jS */ this.cellSetHighlightFromKeyCode(e) : /* jS */ this.cellSetFocusFromKeyCode(e));
+          break;
+        case key.PAGE_UP: /* jS */ this.keyDownHandler_pageUpDown(true);
+          break;
+        case key.PAGE_DOWN: /* jS */ this.keyDownHandler_pageUpDown();
+          break;
+        case key.HOME:
+        case key.END:   /* jS */ this.cellSetFocusFromKeyCode(e);
+          break;
+        case key.V:   /* jS */ this.pasteOverCells(e);
+          break;
+        case key.Y:   /* jS */ this.keyDownHandler_redo(e);
+          break;
+        case key.Z:   /* jS */ this.keyDownHandler_undo(e);
+          break;
+        case key.ESCAPE:  /* jS */ this.cellEditAbandon();
+          break;
+        case key.F:   /* jS */ this.keyDownHandler_findCell(e);
+          break;
+        case key.CONTROL: //we need to filter these to keep cell state
+        case key.CAPS_LOCK:
+        case key.SHIFT:
+        case key.ALT:
+          break;
+        default:    /* jS */ this.obj.cellActive().dblclick(); return true;
+      }
+      return false;
+    }
+  },
+
   pasteOverCells: function(e) { //used for pasting from other spreadsheets
     if (e.ctrlKey || e.type == "paste") {
       var fnAfter = function() {
@@ -127,11 +128,11 @@ ES.evt: { /* event handlers for sheet; e = event */
   },
   inPlaceEditOnKeyDown: function(e) {
     switch (e.keyCode) {
-      case key.ENTER:   return /* jS */ ES.evt.keyDownHandler.enterOnInPlaceEdit(e);
+      case key.ENTER:   return /* jS */ this.keyDownHandler_enterOnInPlaceEdit(e);
         break;
-      case key.TAB:     return /* jS */ ES.evt.keyDownHandler.tab(e);
+      case key.TAB:     return /* jS */ this.keyDownHandler_tab(e);
         break;
-      case key.ESCAPE:  /* jS */ ES.evt.cellEditAbandon(); return false;
+      case key.ESCAPE:  /* jS */ this.cellEditAbandon(); return false;
         break;
     }
   },
@@ -141,7 +142,7 @@ ES.evt: { /* event handlers for sheet; e = event */
   inPlaceEditChange: function(e) {
     /* jS */ this.obj.formula().val(/* jS */ this.obj.inPlaceEdit().val());
   },
-  cellEditDone: function(forceCalc) { /* called to edit a cells value from /* jS */ this.obj.formula(), afterward setting "fnAfterCellEdit" is called w/ params (td, row, col, spreadsheetIndex, sheetIndex)
+  cellEditDoneHandler: function(forceCalc) { /* called to edit a cells value from this.obj.formula(), afterward setting "fnAfterCellEdit" is called w/ params (td, row, col, spreadsheetIndex, sheetIndex)
                       forceCalc: bool, if set to true forces a calculation of the selected sheet
                     */
     switch (/* jS */ this.cellLast.isEdit || forceCalc) {
@@ -213,16 +214,16 @@ ES.evt: { /* event handlers for sheet; e = event */
         s.fnSave();
         break;
       default:
-        /* jS */ this.attrH.setHeight(/* jS */ this.cellLast.row, 'cell', false);
+        /* jS */ this.setHeight(/* jS */ this.cellLast.row, 'cell', false);
     }
   },
   cellEditAbandon: function(skipCalc) { /* removes focus of a selected cell and doesn't change it's value
                         skipCalc: bool, if set to true will skip sheet calculation;
                       */
     /* jS */ this.obj.inPlaceEdit().remove();
-    /* jS */ this.themeRoller.cell.clearActive();
-    /* jS */ this.themeRoller.bar.clearActive();
-    /* jS */ this.themeRoller.cell.clearHighlighted();
+    /* jS */ this.cell_clearActive();
+    /* jS */ this.bar_clearActive();
+    /* jS */ this.cell_clearHighlighted();
     
     if (!skipCalc) {
       /* jS */ this.calc();
@@ -252,7 +253,7 @@ ES.evt: { /* event handlers for sheet; e = event */
     var td = /* jS */ this.getTdFromXY(left, top, skipOffset);
     
     if (/* jS */ this.isTd(td)) {
-      /* jS */ this.themeRoller.cell.clearHighlighted();
+      /* jS */ this.cell_clearHighlighted();
       
       /* jS */ this.cellEdit(td);
       return false;
@@ -307,7 +308,7 @@ ES.evt: { /* event handlers for sheet; e = event */
           return true;
         } else if (s.autoAddCells) {
           if (/* jS */ this.cellLast.row == /* jS */ this.sheetSize().height) {
-            /* jS */ ES.controlFactory.addRow(':last');
+            /* jS */ this.addRow(':last');
           }
         }
         break;
@@ -320,7 +321,7 @@ ES.evt: { /* event handlers for sheet; e = event */
         }
         if (s.autoAddCells) {
           if (/* jS */ this.cellLast.col == /* jS */ this.sheetSize().width) {
-            /* jS */ ES.controlFactory.addColumn(':last');
+            /* jS */ this.addColumn(':last');
           }
         }
         break;
@@ -339,7 +340,7 @@ ES.evt: { /* event handlers for sheet; e = event */
     
       //if the td exists, lets go to it
       if (td) {
-        /* jS */ this.themeRoller.cell.clearHighlighted();
+        /* jS */ this.cell_clearHighlighted();
         td = jQuery(td);
         if (td.is(':hidden')) {
           function getNext(o, reverse) {
@@ -380,12 +381,13 @@ ES.evt: { /* event handlers for sheet; e = event */
   cellOnDblClick: function(e) {
     //socket
     /* jS */ this.cellLast.isEdit = /* jS */ this.isSheetEdit = true;
-    /* jS */ ES.controlFactory.inPlaceEdit(/* jS */ this.cellLast.td);
+    /* jS */ this.inPlaceEdit(/* jS */ this.cellLast.td);
     ///* jS */ this.log('click, in place edit activated');
   },
   scrollBars: function(pane) { /* makes the bars scroll as the sheet is scrolled
                   pane: object, the sheet's pane;
                 */
+    var es = this;
     var o = { //cut down on recursion, grab them once
       barLeft: /* jS */ this.obj.barLeftParent(), 
       barTop: /* jS */ this.obj.barTopParent()
@@ -395,137 +397,138 @@ ES.evt: { /* event handlers for sheet; e = event */
       o.barTop.scrollLeft(pane.scrollLeft());//2 lines of beautiful jQuery js
       o.barLeft.scrollTop(pane.scrollTop());
       
-      /* jS */ this.trigger('paneScroll');
+      /* jS */ es.trigger('paneScroll');
     });
   },
-  barMouseDown: { /* handles bar events, including resizing */
-    select: function(o, e, selectFn) {    
-      selectFn(e.target);
-      o
-        .unbind('mouseover')
-        .mouseover(function(e) {
-          selectFn(e.target);
-        });
-        
-      jQuery(document)
-        .one('mouseup', function() {
-          o
-            .unbind('mouseover')
-            .unbind('mouseup');
-        });
+  
+  /* handles bar events, including resizing */
+  barMouseDown_select: function(o, e, selectFn) {    
+    selectFn(e.target);
+    o
+      .unbind('mouseover')
+      .mouseover(function(e) {
+        selectFn(e.target);
+      });
       
-      return false;
-    },
-    first: 0,
-    last: 0,
-    height: function(o) {     
-      var selectRow = function () {};
+    jQuery(document)
+      .one('mouseup', function() {
+        o
+          .unbind('mouseover')
+          .unbind('mouseup');
+      });
+    
+    return false;
+  },
 
-      o //let any user resize
-        .unbind('mousedown')
-        .mousedown(function(e) {
-          var i = /* jS */ this.getBarLeftIndex(e.target);
-          if (i == -1) return false;
-          
-          /* jS */ ES.evt.barMouseDown.first = /* jS */ ES.evt.barMouseDown.last = /* jS */ this.rowLast = i;
-          /* jS */ ES.evt.barMouseDown.select(o, e, selectRow);
-          return false;
-        })
-        .bind('contextmenu', function(e) {
-          if (!/* jS */ this.isSheetEditable()) return false;
-          
-          var i = /* jS */ this.getBarLeftIndex(e.target);
-          if (i == -1) return false;
-          
-          o.parent()
-            .mousedown()
-            .mouseup();
-          
-          /* jS */ ES.controlFactory.barLeftMenu(e, i);
-          
-          return false;
-        })
-        .parent()
-        .mouseover(function(e) {
-          if (jQuery(e.target).attr('id')) return false;
-          var i = /* jS */ this.getBarLeftIndex(e.target);
-          if (i == -1) return false;
-          
-          /* jS */ this.resizeBarLeft(e);
-          
-          if (/* jS */ this.isSheetEditable())
-            /* jS */ ES.controlFactory.barLeftHandle(o, i);
-        });
+  barMouseDown_height: function(o) { 
+    var es = this;    
+    var selectRow = function () {};
+
+    o //let any user resize
+      .unbind('mousedown')
+      .mousedown(function(e) {
+        var i = /* jS */ this.getBarLeftIndex(e.target);
+        if (i == -1) return false;
         
-      if (/* jS */ this.isSheetEditable()) { //only let editable select
-        selectRow = function(o) {
-          if (!o) return false;
-          if (jQuery(o).attr('id')) return false;
-          var i = /* jS */ this.getBarLeftIndex(o);
-          if (i == -1) return false;
+        /* jS */ es.barMouseDown_first = /* jS */ es.barMouseDown_last = /* jS */ es.rowLast = i;
+        /* jS */ es.barMouseDown_select(o, e, selectRow);
+        return false;
+      })
+      .bind('contextmenu', function(e) {
+        if (!/* jS */ es.isSheetEditable()) return false;
+        
+        var i = /* jS */ es.getBarLeftIndex(e.target);
+        if (i == -1) return false;
+        
+        o.parent()
+          .mousedown()
+          .mouseup();
+        
+        /* jS */ es.barLeftMenu(e, i);
+        
+        return false;
+      })
+      .parent()
+      .mouseover(function(e) {
+        if (jQuery(e.target).attr('id')) return false;
+        var i = /* jS */ es.getBarLeftIndex(e.target);
+        if (i == -1) return false;
+        
+        /* jS */ es.resizeBarLeft(e);
+        
+        if (/* jS */ es.isSheetEditable())
+          /* jS */ es.barLeftHandle(o, i);
+      });
+      
+    if (/* jS */ this.isSheetEditable()) { //only let editable select
+      selectRow = function(o) {
+        if (!o) return false;
+        if (jQuery(o).attr('id')) return false;
+        var i = /* jS */ this.getBarLeftIndex(o);
+        if (i == -1) return false;
+        
+        /* jS */ this.rowLast = i; //keep track of last row for inserting new rows
+        /* jS */ this.barMouseDown_last = i;
+        
+        /* jS */ this.cellSetActiveBar('row', /* jS */ this.barMouseDown_first, /* jS */ this.barMouseDown_last);
+      };
+    }
+  },
+  barMouseDown_width: function(o) {
+    var es = this;
+    var selectColumn = function() {};
+    var w = 0;
+    o //let any user resize
+      .unbind('mousedown')
+      .mousedown(function(e) {
+        var i = /* jS */ this.getBarTopIndex(e.target);
+        if (i == -1) return false;
           
-          /* jS */ this.rowLast = i; //keep track of last row for inserting new rows
-          /* jS */ ES.evt.barMouseDown.last = i;
-          
-          /* jS */ this.cellSetActiveBar('row', /* jS */ ES.evt.barMouseDown.first, /* jS */ ES.evt.barMouseDown.last);
-        };
-      }
-    },
-    width: function(o) {
-      var selectColumn = function() {};
-      var w = 0;
-      o //let any user resize
-        .unbind('mousedown')
-        .mousedown(function(e) {
-          var i = /* jS */ this.getBarTopIndex(e.target);
-          if (i == -1) return false;
-            
-          /* jS */ ES.evt.barMouseDown.first = /* jS */ ES.evt.barMouseDown.last = /* jS */ this.colLast = i;
-          /* jS */ ES.evt.barMouseDown.select(o, e, selectColumn);
+        /* jS */ es.barMouseDown_first = /* jS */ es.barMouseDown_last = /* jS */ es.colLast = i;
+        /* jS */ es.barMouseDown_select(o, e, selectColumn);
 
-          return false;
-        })
-        .bind('contextmenu', function(e) {
-          if (!/* jS */ this.isSheetEditable()) return false;
+        return false;
+      })
+      .bind('contextmenu', function(e) {
+        if (!/* jS */ es.isSheetEditable()) return false;
+        
+        var i = /* jS */ es.getBarTopIndex(e.target);
+        if (i == -1) return false;
+        o.parent()
+          .mousedown()
+          .mouseup();
           
-          var i = /* jS */ this.getBarTopIndex(e.target);
-          if (i == -1) return false;
-          o.parent()
-            .mousedown()
-            .mouseup();
-            
-          /* jS */ ES.controlFactory.barTopMenu(e, i);
-          
-          return false;
-        })
-        .parent()
-        .mouseover(function(e) {
-          if (jQuery(e.target).attr('id')) return false;
-          var i = /* jS */ this.getBarTopIndex(e.target);
-          if (i == -1) return false;
-          ///* jS */ this.log('Column: ' +i);
-          /* jS */ this.resizeBarTop(e);
-          
-          if (/* jS */ this.isSheetEditable()) {
-            /* jS */ ES.controlFactory.barTopHandle(o, i);
-            /* jS */ ES.controlFactory.barTopMenu(e, i, jQuery(e.target));
-          }
-          
-          return false;
-        });
-      if (/* jS */ this.isSheetEditable()) { //only let editable select
-        selectColumn = function(o) {
-          if (!o) return false;
-          if (jQuery(o).attr('id')) return false;
-          var i = /* jS */ this.getBarTopIndex(o);
-          if (i == -1) return false;
-          
-          /* jS */ this.colLast = i; //keep track of last column for inserting new columns
-          /* jS */ ES.evt.barMouseDown.last = i;
-          
-          /* jS */ this.cellSetActiveBar('col', /* jS */ ES.evt.barMouseDown.first, /* jS */ ES.evt.barMouseDown.last);
-        };
-      }
+        /* jS */ es.barTopMenu(e, i);
+        
+        return false;
+      })
+      .parent()
+      .mouseover(function(e) {
+        if (jQuery(e.target).attr('id')) return false;
+        var i = /* jS */ es.getBarTopIndex(e.target);
+        if (i == -1) return false;
+        ///* jS */ es.log('Column: ' +i);
+        /* jS */ es.resizeBarTop(e);
+        
+        if (/* jS */ es.isSheetEditable()) {
+          /* jS */ es.barTopHandle(o, i);
+          /* jS */ es.barTopMenu(e, i, jQuery(e.target));
+        }
+        
+        return false;
+      });
+    if (/* jS */ es.isSheetEditable()) { //only let editable select
+      selectColumn = function(o) {
+        if (!o) return false;
+        if (jQuery(o).attr('id')) return false;
+        var i = /* jS */ es.getBarTopIndex(o);
+        if (i == -1) return false;
+        
+        /* jS */ es.colLast = i; //keep track of last column for inserting new columns
+        /* jS */ es.barMouseDown_last = i;
+        
+        /* jS */ es.cellSetActiveBar('col', /* jS */ es.barMouseDown_first, /* jS */ es.barMouseDown_last);
+      };
     }
   }
-},
+});

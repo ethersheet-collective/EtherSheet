@@ -1,4 +1,4 @@
-ES.jSS = {
+jQuery.extend(ES.prototype,{
   cell_active: function(data){
     console.log('cell active socket rcd');
     console.log(data.user);
@@ -18,10 +18,10 @@ ES.jSS = {
   },
   control_factory_trigger: function(data){
     console.log('trigger');
-    /* jS */ ES.controlFactory[data.fnName].apply(/* jS */ ES.controlFactory, data.fnArgs);
+    /* jS */ this[data.fnName].apply(/* jS */ this, data.fnArgs);
   },
   jsheet_trigger: function(data){
     console.log('trigger');
-    jS[data.fnName].apply(jS, data.fnArgs);
+    this[data.fnName].apply(jS, data.fnArgs);
   }
-};
+});

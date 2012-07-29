@@ -29,9 +29,9 @@ ES.cellUndoable = { /* makes cell editing undoable and redoable
       }
     });
     
-    /* jS */ ES.themeRoller.cell.clearActive();
-    /* jS */ ES.themeRoller.bar.clearActive();
-    /* jS */ ES.themeRoller.cell.clearHighlighted();
+    /* jS */ this.cell_clearActive();
+    /* jS */ this.bar_clearActive();
+    /* jS */ this.cell_clearHighlighted();
     
     /* jS */ this.calc();
   },
@@ -65,4 +65,4 @@ ES.cellUndoable = { /* makes cell editing undoable and redoable
   },
   i: 0,
   stack: []
-},
+};
