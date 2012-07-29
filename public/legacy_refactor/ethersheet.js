@@ -166,10 +166,10 @@ var ES = function(s){
   
   this.s.parent
     .bind('switchSpreadsheet', function(e, js, i){
-      /* jS */ this.switchSpreadsheet(i);
+      /* jS */ es.switchSpreadsheet(i);
     })
     .bind('renameSpreadsheet', function(e, js, i){
-      /* jS */ this.renameSpreadsheet(i);
+      /* jS */ es.renameSpreadsheet(i);
     });
   
   //Use the setting height/width if they are there, otherwise use parent's
@@ -217,7 +217,7 @@ var ES = function(s){
       if (jS) { //We check because jS might have been killed
         this.s.width = this.s.parent.width();
         this.s.height = this.s.parent.height();
-        /* jS */ this.sheetSyncSize();
+        /* jS */ es.sheetSyncSize();
       }
     });
   
@@ -369,9 +369,9 @@ jQuery.extend(ES.prototype,{
       formula.val(firstValue);
     }
     
-    /* jS */ ES.cellUndoable.add(tdsBefore.children());
+    /* jS */ /*undoable */ this.add(tdsBefore.children());
     /* jS */ this.fillUpOrDown(false, false, firstValue);
-    /* jS */ ES.cellUndoable.add(tdsAfter.children());
+    /* jS */ /*undoable */ this.add(tdsAfter.children());
 
     /* jS */ this.setDirty(true);
     /* jS */ this.cellEditDoneHandler(true);
@@ -392,7 +392,7 @@ jQuery.extend(ES.prototype,{
   isSheetEditable: function(i) {
     i = (i == null ? /* jS */ this.i : i);
     return (
-      this.s.editable == true && !/* jS */ this.readOnly[i]
+      this.s.editable == true && /* jS */ !this.readOnly[i]
     );
   },
   isFormulaEditable: function(o) { /* ensures that formula attribute of an object is editable
@@ -600,7 +600,7 @@ jQuery.extend(ES.prototype,{
     var cells = /* jS */ this.obj.cellHighlighted();
     var cellActive = /* jS */ this.obj.cellActive();
     //Make it undoable
-    /* jS */ ES.cellUndoable.add(cells);
+    /* jS */ /*undoable */ this.add(cells);
     
     var startFromActiveCell = cellActive.hasClass(ES.cl.uiCellHighlighted);
     var startLoc = /* jS */ this.getTdLocation(cells.first());
@@ -659,7 +659,7 @@ jQuery.extend(ES.prototype,{
     /* jS */ this.calc();
     
     //Make it redoable
-    /* jS */ ES.cellUndoable.add(cells);
+    /* jS */ /*undoable */ this.add(cells);
   },
   offsetFormulas: function(loc, offset, isBefore) {/* makes cell formulas increment in a range
                                         loc: {row: int, col: int}
@@ -1112,7 +1112,7 @@ jQuery.extend(ES.prototype,{
     //Lets check to remove any style classes
     var uiCell = /* jS */ this.obj.cellHighlighted();
     
-    /* jS */ ES.cellUndoable.add(uiCell);
+    /* jS */ /*undoable */ this.add(uiCell);
     
     if (removeClass) {
       uiCell.removeClass(removeClass);
@@ -1124,7 +1124,7 @@ jQuery.extend(ES.prototype,{
       uiCell.addClass(setClass);
     }
     
-    /* jS */ ES.cellUndoable.add(uiCell);
+    /* jS */ /*undoable */ this.add(uiCell);
     
     ///* jS */ this.obj.formula()
       //.focus()
@@ -1147,7 +1147,7 @@ jQuery.extend(ES.prototype,{
     //Lets check to remove any style classes
     var uiCell = /* jS */ this.obj.cellHighlighted();
     
-    /* jS */ ES.cellUndoable.add(uiCell);
+    /* jS */ /*undoable */ this.add(uiCell);
     
     uiCell.each(function(i) {
       cell = jQuery(this);
@@ -1156,7 +1156,7 @@ jQuery.extend(ES.prototype,{
       cell.css("font-size", new_size + "px");
     });
     
-    /* jS */ ES.cellUndoable.add(uiCell);
+    /* jS */ /*undoable */ this.add(uiCell);
   },
   
   updateCellValue: function(sheet, row, col) {
@@ -1266,18 +1266,19 @@ jQuery.extend(ES.prototype,{
   addSheet: function(size, socket) { /* adds a spreadsheet
                   size: string example "10x100" which means 10 columns by 100 rows;
                 */
+    var es = this;
     size = (size ? size : prompt(ES.msg.newSheet));
     if (size) {
       /* jS */ this.cellEditAbandon();
       /* jS */ this.setDirty(true);
       var newSheetControl = /* jS */ this.sheetUI(ES.makeTable.fromSize(size), /* jS */ this.sheetCount + 1, function(o) { 
-        /* jS */ this.setActiveSheet(/* jS */ this.sheetCount);
+        /* jS */ es.setActiveSheet(/* jS */ es.sheetCount);
       }, true);
       
       if(!socket){
         args = [].slice.call(arguments)
         args[1] = true;
-        this.s.socket.emit('message', { action:'jsheet_trigger', args:{fnName: 'addSheet', fnArgs: args} });
+        if(this.s.socket) this.s.socket.emit('message', { action:'jsheet_trigger', args:{fnName: 'addSheet', fnArgs: args} });
       }
       /* jS */ this.trigger('addSheet', [/* jS */ this.i]);
     }
@@ -1796,9 +1797,9 @@ jQuery.extend(ES.prototype,{
                         value: string, css setting;
                       */
                       //socket
-    /* jS */ ES.cellUndoable.add(/* jS */ this.obj.cellHighlighted()); //save state, make it undoable
+    /* jS */ /*undoable */ this.add(/* jS */ this.obj.cellHighlighted()); //save state, make it undoable
     /* jS */ this.obj.cellHighlighted().css(style, value);
-    /* jS */ ES.cellUndoable.add(/* jS */ this.obj.cellHighlighted()); //save state, make it redoable
+    /* jS */ /*undoable */ this.add(/* jS */ this.obj.cellHighlighted()); //save state, make it redoable
 
   },
   cellFind: function(v) { /* finds a cell in a sheet from a value

@@ -1,4 +1,5 @@
-ES.cellUndoable = { /* makes cell editing undoable and redoable
+jQuery.extend(ES.prototype,{ 
+/* makes cell editing undoable and redoable
           there should always be 2 cellUndoable.add()'s every time used, one to save the current state, the second to save the new
         */
   undoOrRedo: function(undo) {
@@ -65,4 +66,4 @@ ES.cellUndoable = { /* makes cell editing undoable and redoable
   },
   i: 0,
   stack: []
-};
+});

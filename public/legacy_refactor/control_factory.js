@@ -34,6 +34,7 @@ jQuery.extend(ES.prototype,{
                               type: string - "col" || "row", determans the type of cells to add;
                               skipFormulaReparse: bool, re-parses formulas if needed
                           */
+    var es = this;
     //hide the autoFiller, it can get confused
     if (this.s.autoFiller) {
       /* jS */ this.obj.autoFiller().hide();
@@ -75,10 +76,10 @@ jQuery.extend(ES.prototype,{
           col: function() { return ''; },
           newBar: '<div class="' + ES.cl.uiBar + '" style="height: ' + (this.s.colMargin - this.s.boxModelCorrection) + 'px;" />',
           size: function() {
-            return /* jS */ this.getTdLocation(o.cells().find('td:last'));
+            return /* jS */ es.getTdLocation(o.cells().find('td:last'));
           },
           loc: function() {
-            return /* jS */ this.getTdLocation(o.cells().find('td:first'));
+            return /* jS */ es.getTdLocation(o.cells().find('td:first'));
           },
           newCells: function() {
             var j = o.size().col;
@@ -88,7 +89,7 @@ jQuery.extend(ES.prototype,{
               newCells += '<td />';
             }
             
-            return '<tr style="height: ' + this.s.colMargin + 'px;">' + newCells + '</tr>';
+            return '<tr style="height: ' + es.s.colMargin + 'px;">' + newCells + '</tr>';
           },
           newCol: '',
           reLabel: function() {               
@@ -97,7 +98,7 @@ jQuery.extend(ES.prototype,{
             });
           },
           dimensions: function(bar, cell, col) {
-            bar.height(cell.height(this.s.colMargin).outerHeight() - this.s.boxModelCorrection);
+            bar.height(cell.height(es.s.colMargin).outerHeight() - es.s.boxModelCorrection);
           },
           offset: {row: qty,col: 0}
         };
@@ -109,14 +110,14 @@ jQuery.extend(ES.prototype,{
           cells: function() {
             var cellStart = sheet.find('tr:first').children(eq);
             var cellEnd = sheet.find('td:last');
-            var loc1 = /* jS */ this.getTdLocation(cellStart);
-            var loc2 = /* jS */ this.getTdLocation(cellEnd);
+            var loc1 = /* jS */ es.getTdLocation(cellStart);
+            var loc2 = /* jS */ es.getTdLocation(cellEnd);
             
             //we get the first cell then get all the other cells directly... faster ;)
-            var cells = jQuery(/* jS */ this.getTd(/* jS */ this.i, loc1.row, loc1.col));
+            var cells = jQuery(/* jS */ es.getTd(/* jS */ es.i, loc1.row, loc1.col));
             var cell;
             for (var i = 1; i <= loc2.row; i++) {
-              cells.push(/* jS */ this.getTd(/* jS */ this.i, i, loc1.col));
+              cells.push(/* jS */ es.getTd(/* jS */ es.i, i, loc1.col));
             }
             
             return cells;
@@ -128,7 +129,7 @@ jQuery.extend(ES.prototype,{
           newCol: '<col />',
           loc: function(cells) {
             cells = (cells ? cells : o.cells());
-            return /* jS */ this.getTdLocation(cells.first());
+            return /* jS */ es.getTdLocation(cells.first());
           },
           newCells: function() {
             return '<td />';
@@ -139,14 +140,14 @@ jQuery.extend(ES.prototype,{
             });
           },
           dimensions: function(bar, cell, col) {                
-            var w = this.s.newColumnWidth;
+            var w = es.s.newColumnWidth;
             col
               .width(w)
               .css('width', w + 'px')
               .attr('width', w + 'px');
             
             bar
-              .width(w - this.s.boxModelCorrection);
+              .width(w - es.s.boxModelCorrection);
             
             sheet.width(sheetWidth + (w * qty));
           },
@@ -156,7 +157,7 @@ jQuery.extend(ES.prototype,{
     }
     
     //make undoable
-    /* jS */ this.cellUndoable.add(jQuery(sheet).add(o.barParent));
+    /* jS */ this.add(jQuery(sheet).add(o.barParent));
     
     var cells = o.cells();
     var loc = o.loc(cells); 
@@ -206,7 +207,7 @@ jQuery.extend(ES.prototype,{
     /* jS */ this.sheetSyncSize();
     
     //Let's make it redoable
-    /* jS */ this.cellUndoable.add(jQuery(sheet).add(o.barParent));
+    /* jS */ this.add(jQuery(sheet).add(o.barParent));
   },
   addRow: function(atRow, isBefore, atRowQ, socket) {/* creates single row
                         qty: int, the number of cells you'd like to add, if not specified, a dialog will ask; 
@@ -850,6 +851,7 @@ jQuery.extend(ES.prototype,{
                   td: object, the cell to be edited
                 */
                 //socket
+    var es = this;
     /* jS */ this.obj.inPlaceEdit().remove();
     var formula = /* jS */ this.obj.formula();         
     var offset = td.offset();
@@ -861,7 +863,7 @@ jQuery.extend(ES.prototype,{
       .css('top', offset.top)
       .width(w)
       .height(h)
-      .keydown(/* jS */ this.inPlaceEditOnKeyDown)
+      .keydown(/* jS */ this.inPlaceEditOnKeyDown.bind(this))
       .keyup(function() {
         formula.val(textarea.val());
       })
@@ -869,15 +871,15 @@ jQuery.extend(ES.prototype,{
         formula.val(textarea.val());
       })
       .focus(function() {
-        /* jS */ this.setNav(false);
+        /* jS */ es.setNav(false);
       })
       .focusout(function() {
-        /* jS */ this.setNav(true);
+        /* jS */ es.setNav(true);
       })
       .blur(function() {
-        /* jS */ this.setNav(true);
+        /* jS */ es.setNav(true);
       })
-      .bind('paste', /* jS */ this.pasteOverCells)
+      .bind('paste', /* jS */ es.pasteOverCells.bind(this))
       .appendTo('body')
       .val(formula.val())
       .focus()

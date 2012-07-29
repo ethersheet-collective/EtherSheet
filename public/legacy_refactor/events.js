@@ -28,14 +28,14 @@ jQuery.extend(ES.prototype,{
   },
   keyDownHandler_redo: function(e) {
     if (e.ctrlKey && !/* jS */ this.cellLast.isEdit) { 
-      /* jS */ this.cellUndoable.undoOrRedo();
+      /* jS */ this.undoOrRedo();
       return false;
     }
     return true;
   },
   keyDownHandler_undo: function(e) {
     if (e.ctrlKey && !/* jS */ this.cellLast.isEdit) {
-      /* jS */ this.cellUndoable.undoOrRedo(true);
+      /* jS */ this.undoOrRedo(true);
       return false;
     }
     return true;
@@ -58,6 +58,7 @@ jQuery.extend(ES.prototype,{
     return /* jS */ this.cellSetFocusFromXY(left, top);
   },
   keyDownHandler_formulaKeydown: function(e) {
+
     switch (e.keyCode) {
       case key.ESCAPE:  /* jS */ this.cellEditAbandon();
         break;
@@ -156,7 +157,7 @@ jQuery.extend(ES.prototype,{
             //Lets ensure that the cell being edited is actually active
             if (td && /* jS */ this.cellLast.row > -1 && /* jS */ this.cellLast.col > -1) {
               //first, let's make it undoable before we edit it
-              /* jS */ this.cellUndoable.add(td);
+              /* jS */ this.add(td);
               //This should return either a val from textbox or formula, but if fails it tries once more from formula.
               var v = formula.val();
               var prevVal = td.text();
@@ -193,7 +194,7 @@ jQuery.extend(ES.prototype,{
               /* jS */ this.attrH.setHeight(/* jS */ this.cellLast.row, 'cell');
               
               //Save the newest version of that cell
-              /* jS */ this.cellUndoable.add(td);
+              /* jS */ this.add(td);
               
               //formula.focus().select();
               /* jS */ this.cellLast.isEdit = false;
@@ -239,7 +240,7 @@ jQuery.extend(ES.prototype,{
     /* jS */ this.obj.formula()
       .val('');
     
-    if (s.autoFiller) {
+    if (this.s.autoFiller) {
       /* jS */ this.obj.autoFiller().hide();
     }
     
