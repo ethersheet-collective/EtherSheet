@@ -10,7 +10,7 @@ module.exports = {
 // ## recursive watch_list
 // List of files and directories to monitor.
   recursive_watch_list: [
-    'lib','public','views','test'
+    'lib','views','test'
   ],
 
 // ## processes
