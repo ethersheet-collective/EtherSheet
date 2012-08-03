@@ -5,12 +5,18 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
   <!--Ethersheet-->
+  <link rel="stylesheet" type="text/css" href="/es/styles/table.css" />
   <script type="text/javascript" src="/es/vendor/zepto.js"></script>
   <script type="text/javascript" src="/es/vendor/underscore.js"></script>
   <script type="text/javascript" src="/es/vendor/backbone.js"></script>
+  <script type="text/javascript" src="/es/es.js"></script>
+  <script type="text/javascript" src="/es/css.js"></script>
+  <script type="text/javascript" src="/es/templates"></script>
+  <script type="text/javascript" src="/es/models/sheet.js"></script>
+  <script type="text/javascript" src="/es/views/sheet.js"></script>
   
   <!--Test Harness-->
-  <link rel="stylesheet" type="text/css" href="/test/mocha.css" />
+  <link id="mocha-styles" rel="stylesheet" type="text/css" href="/test/mocha.css" />
   <script src="/test/mocha.js"></script>
   <script src="/test/chai.js"></script>
   <script>
@@ -20,15 +26,33 @@
     });
     var should = chai.Should();
     $(function(){
+      $('#test-toggle').click(function(){
+        var $mocha = $('#mocha');
+        var $es = $('#ethersheet-container');
+        var $styles = $('#mocha-styles');
+        if($mocha.css('display')=='none'){
+          $es.hide();
+          $styles.attr('rel','stylesheet');
+          $mocha.show();
+          $(this).html('[X] Display Tests');
+        } else {
+          $mocha.hide();
+          $styles.attr('rel','disabled');
+          $es.show();
+          $(this).html('[ ] Display Tests');
+        } 
+      });
       mocha.run();
     });
   </script>
   <script src="/test/views/sheet.js"></script>
   
 </head>
-<body>
+<body style="margin-top:18px;">
+  <a id="test-toggle" style="position:absolute;top:0;left:0;font-size:12px;font-family:monaco;cursor:pointer;">[X] Display Tests</a>
   <div id="mocha"></div>
-  <div id="ethersheet"></div>
-
+  <div id="ethersheet-container" style="display:none;">
+    <div id="ethersheet"></div>
+  </div>
 </body>
 </html>
