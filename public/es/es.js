@@ -1,0 +1,2 @@
+// Ethersheet namespace
+var ES = {};
