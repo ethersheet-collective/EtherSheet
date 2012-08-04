@@ -1,6 +1,8 @@
 .table{
 border-collapse: collapse;
 float:left;
+table-layout: fixed;
+width: 0;
 }
 .table td, .table th{
 padding:0;
