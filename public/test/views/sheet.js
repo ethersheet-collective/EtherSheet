@@ -18,6 +18,8 @@ describe('SheetView', function(){
     $('#ethersheet .table-row').length.should.equal(100);
     $('#ethersheet .table-cell').length.should.equal(2000);
     $('#ethersheet .column-header').length.should.equal(20);
-    $('#ethersheet .row-header').length.should.equal(100);
+    $('#ethersheet .row-header').length.should.equal(100)
+    $("#ethersheet .row-header").last().text().should.equal('100');
+    $("#ethersheet .column-header").last().text().should.equal('T');
   });
 });
