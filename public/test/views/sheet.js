@@ -1,13 +1,13 @@
-describe('SheetView', function(){
+describe('TableView', function(){
 
-  var sheet;
+  var table;
 
   before(function(){
-    sheet = new ES.SheetView({
+    table = new ES.TableView({
       el: document.getElementById('ethersheet'),
       model: new ES.Sheet()
     });
-    sheet.render();
+    table.render();
   });
 
   it('should render a table', function(){

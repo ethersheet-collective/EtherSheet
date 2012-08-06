@@ -1,6 +1,5 @@
-ES.SheetView = Backbone.View.extend({
+ES.TableView = Backbone.View.extend({
   initialize: function(o){
-    
     this.num_row = 100;
     this.num_col = 20;
     this.elements_initialized = false;
