@@ -15,11 +15,12 @@ describe('TableView', function(){
   });
 
   it('by default, it should create a blank 20x100 table display', function(){
-    $('#ethersheet .table-row').length.should.equal(100);
-    $('#ethersheet .table-cell').length.should.equal(2000);
-    $('#ethersheet .column-header').length.should.equal(20);
-    $('#ethersheet .row-header').length.should.equal(100)
-    $("#ethersheet .row-header").last().text().should.equal('100');
+    var expected_cell_count = ES.DEFAULT_ROW_COUNT * ES.DEFAULT_COL_COUNT;
+    $('#ethersheet .table-cell').length.should.equal(expected_cell_count);
+    $('#ethersheet .table-row').length.should.equal(ES.DEFAULT_ROW_COUNT);
+    $('#ethersheet .column-header').length.should.equal(ES.DEFAULT_COL_COUNT);
     $("#ethersheet .column-header").last().text().should.equal('T');
+    $('#ethersheet .row-header').length.should.equal(ES.DEFAULT_ROW_COUNT)
+    $("#ethersheet .row-header").last().text().should.equal('100');
   });
 });
