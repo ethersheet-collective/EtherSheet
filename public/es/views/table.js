@@ -1,7 +1,8 @@
 ES.TableView = Backbone.View.extend({
   initialize: function(o){
-    this.num_row = 100;
-    this.num_col = 20;
+    this.sheet = this.model;
+    this.num_row = this.sheet.rowCount();
+    this.num_col = this.sheet.colCount();
     this.elements_initialized = false;
   },
   render: function(){
