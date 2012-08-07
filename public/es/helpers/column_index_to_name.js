@@ -7,4 +7,4 @@ ES.columnIndexToName = function(index){
     char_array.push(char_code);
   } 
   return String.fromCharCode.apply(this,char_array);
-}
+};
