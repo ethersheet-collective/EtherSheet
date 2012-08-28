@@ -283,6 +283,12 @@ jQuery.sheet = {
         menuAddSheet:     "Add spreadsheet",
         menuDeleteSheet:    "Delete spreadsheet"
       },
+      sanitize: function(unsafe_string) { /*escape html entities */
+        safe_string = unsafe_string.
+          replace('<', '&lt').
+          replace('>', '&gt');
+    
+      },
       kill: function() { /* For ajax manipulation, kills this instance of sheet entirley */
         jS.obj.tabContainer().remove();
         jS.obj.fullScreen().remove();
@@ -4095,6 +4101,7 @@ jQuery.sheet = {
           console.log('user');
           console.log(data.user);
           var td = jS.getTd(data.sheet_idx,data.cell.row,data.cell.col);
+          data.cell.value = jS.sanitize(data.cell.value);
           jS.createCell(data.sheet_idx,data.cell.row,data.cell.col,data.cell.value,data.cell.formula,data.cell.calcCount);
           if(data.cell.formula){jQuery(td).attr('formula',data.cell.formula);}
           jS.calc();
