@@ -15,7 +15,7 @@ describe('Sheet', function(){
     sheet.on('all',function(){
       events.push({
         name: arguments[0],
-        args: Array.slice.call(arguments,1)
+        args: Array.prototype.slice.call(arguments,1)
       });
     });
   };
@@ -79,6 +79,7 @@ describe('Sheet', function(){
     it('should trigger an insert_row event',function(){
       events.length.should.equal(1);
       events[0].name.should.equal('insert_row');
+      events[0].args[0].should.equal(new_row_id);
     });
   });
 
