@@ -1,9 +1,17 @@
+if (typeof define !== 'function') { var define = require('amdefine')(module) }
+define(function (require) {
+
+var Sheet = require('es/models/sheet');
+var ES = require('es/config');
+var expect = require('chai').expect;
+var should = require('chai').should();
+
 describe('Sheet', function(){
   var sheet, events;
 
   initializeSheet = function(){
     events = [];
-    sheet = new ES.Sheet();
+    sheet = new Sheet();
     sheet.on('all',function(){
       events.push({
         name: arguments[0],
@@ -96,7 +104,7 @@ describe('Sheet', function(){
   });
 
   describe('insert column', function(){
-    var second_col_id, new_row_id;
+    var second_col_id, new_row_id, new_col_id;
     
     before(function(){
       initializeSheet();
@@ -130,5 +138,7 @@ describe('Sheet', function(){
       expect(sheet.cells[row_id][col_id]).to.be.undefined;
     });
   });
+
+});
 
 });

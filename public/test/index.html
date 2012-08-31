@@ -4,53 +4,41 @@
   <title>Ethersheet Test Suite</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-  <!--Ethersheet-->
-  <link rel="stylesheet" type="text/css" href="/es/styles/table.css" />
-  <script type="text/javascript" src="/es/vendor/zepto.js"></script>
-  <script type="text/javascript" src="/es/vendor/underscore.js"></script>
-  <script type="text/javascript" src="/es/vendor/backbone.js"></script>
-  <script type="text/javascript" src="/es/es.js"></script>
-  <script type="text/javascript" src="/es/css.js"></script>
-  <script type="text/javascript" src="/es/templates"></script>
-  <script type="text/javascript" src="/es/helpers/column_index_to_name.js"></script>
-  <script type="text/javascript" src="/es/helpers/uid.js"></script>
-  <script type="text/javascript" src="/es/models/sheet.js"></script>
-  <script type="text/javascript" src="/es/views/table.js"></script>
-  
   <!--Test Harness-->
   <link id="mocha-styles" rel="stylesheet" type="text/css" href="/test/mocha.css" />
   <script src="/test/mocha.js"></script>
-  <script src="/test/chai.js"></script>
+  <script src="/test/setup_test_display.js"></script>
+
+  <!--Ethersheet-->
+  <link rel="stylesheet" type="text/css" href="/es/styles/table.css" />
+  <script src="/es/vendor/require.js"></script>
+  <script type="text/javascript" src="/es/vendor/underscore.js"></script>
+  <script type="text/javascript" src="/es/templates"></script>
+  <script src="/es/boot.js"></script>
+  
+
   <script>
+  
     mocha.setup({
       ui:'bdd',
       ignoreLeaks: true
     });
-    var should = chai.Should();
-    var expect = chai.expect;
-    $(function(){
-      $('#test-toggle').click(function(){
-        var $mocha = $('#mocha');
-        var $es = $('#ethersheet-container');
-        var $styles = $('#mocha-styles');
-        if($mocha.css('display')=='none'){
-          $es.hide();
-          $styles.attr('rel','stylesheet');
-          $mocha.show();
-          $(this).html('[X] Display Tests');
-        } else {
-          $mocha.hide();
-          $styles.attr('rel','disabled');
-          $es.show();
-          $(this).html('[ ] Display Tests');
-        } 
+    
+    var deps = ['zepto','es/helpers'];
+    
+    var tests = [
+      'test/models/sheet',
+      'test/views/table'
+    ];
+
+    require(deps.concat(tests), function($){
+      $(function(){
+        setupTestDisplay($);
+        mocha.run();
       });
-      mocha.run();
     });
   </script>
-  <script src="/test/views/table.js"></script>
-  <script src="/test/models/sheet.js"></script>
-  
+    
 </head>
 <body style="margin-top:18px;">
   <a id="test-toggle" style="position:absolute;top:0;left:0;font-size:12px;font-family:monaco;cursor:pointer;">[X] Display Tests</a>

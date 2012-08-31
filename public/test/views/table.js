@@ -1,11 +1,20 @@
+if (typeof define !== 'function') { var define = require('amdefine')(module) }
+define(function (require) {
+
+var Sheet = require('es/models/sheet');
+var TableView = require('es/views/table');
+var ES = require('es/config');
+var expect = require('chai').expect;
+var should = require('chai').should();
+
 describe('TableView', function(){
 
   var table;
 
   before(function(){
-    table = new ES.TableView({
+    table = new TableView({
       el: document.getElementById('ethersheet'),
-      model: new ES.Sheet()
+      model: new Sheet()
     });
     table.render();
   });
@@ -23,4 +32,6 @@ describe('TableView', function(){
     $('#ethersheet .row-header').length.should.equal(ES.DEFAULT_ROW_COUNT)
     $("#ethersheet .row-header").last().text().should.equal('100');
   });
+});
+
 });
