@@ -16,12 +16,15 @@
     "jison": ">=0.3.2",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
+    "backbone": "*",
     "socket.io": ">=0.9.5",
-    "stitchit": "*"
+    "stitchit": "*",
+    "amdefine": ">=0.0.2"
   },
   "devDependencies": {
     "mocha": ">=1.3.0",
     "webdriverjs": ">=0.6.0",
+    "chai": "*",
     "should": ">=0.6.3"
   },
   "scripts": {
