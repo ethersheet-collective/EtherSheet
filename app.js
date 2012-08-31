@@ -1,7 +1,12 @@
+var config, server;
+
 if(process.env.NODE_ENV == 'test'){
   console.log('starting Ethersheet in test mode');
-  var config = require('./test/config-test');
+  config = require('./test/config-test');
+} else if(process.env.CONFIG_PATH){
+  config = require(process.env.CONFIG_PATH);
 } else {
-  var config = require('./config');
+  config = require('./config');
 }
-var server = require('./lib/server.js').createServer(config);
+
+server = require('./lib/server.js').createServer(config);
