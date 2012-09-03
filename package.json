@@ -19,6 +19,7 @@
     "backbone": "*",
     "socket.io": ">=0.9.5",
     "stitchit": "*",
+    "jquery": ">=1.7.0",
     "amdefine": ">=0.0.2"
   },
   "devDependencies": {
