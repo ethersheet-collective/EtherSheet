@@ -18,18 +18,17 @@
   
 
   <script>
-  
-    mocha.setup({
-      ui:'bdd',
-      ignoreLeaks: true
-    });
-    
-    var deps = ['zepto','es/helpers'];
+    var deps = ['jquery','es/helpers'];
     
     var tests = [
       'test/models/sheet',
       'test/views/table'
     ];
+
+    mocha.setup({
+      ui:'bdd',
+      ignoreLeaks: true
+    });
 
     require(deps.concat(tests), function($){
       $(function(){
@@ -41,10 +40,6 @@
     
 </head>
 <body style="margin-top:18px;">
-  <a id="test-toggle" style="position:absolute;top:0;left:0;font-size:12px;font-family:monaco;cursor:pointer;">[X] Display Tests</a>
   <div id="mocha"></div>
-  <div id="ethersheet-container" style="display:none;">
-    <div id="ethersheet"></div>
-  </div>
 </body>
 </html>

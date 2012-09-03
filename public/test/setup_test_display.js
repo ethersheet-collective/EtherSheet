@@ -1,5 +1,13 @@
-function setupTestDisplay($){ 
-  $('#test-toggle').click(function(){
+function setupTestDisplay($){
+  $('<a id="test-toggle">')
+  .css({
+    position: 'absolute',
+    top:0,
+    left:0,
+    cursor:'pointer',
+    font:'12px monaco'
+  })
+  .click(function(){
     var $mocha = $('#mocha');
     var $es = $('#ethersheet-container');
     var $styles = $('#mocha-styles');
@@ -14,5 +22,7 @@ function setupTestDisplay($){
       $es.show();
       $(this).html('[ ] Display Tests');
     } 
-  });
+  })
+  .text('[X] Display Tests')
+  .prependTo('body')
 };
