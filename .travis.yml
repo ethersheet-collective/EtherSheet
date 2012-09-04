@@ -6,12 +6,12 @@ after_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - "npm start & > /dev/null"
-  - "java -jar test/lib/selenium-server-standalone-2.21.0.jar & > /dev/null"
+  - "java -jar lib/test/lib/selenium-server-standalone-2.21.0.jar & > /dev/null"
 notifications:
   email:
     - ted@radicaldesigns.org 
     - cooperq@cooperq.com
 before_script:
-  - mysql -uroot < test/test.sql
+  - mysql -uroot < examples/db.sql
   - cp test/config-test.js config.js
 
