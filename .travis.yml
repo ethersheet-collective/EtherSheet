@@ -4,6 +4,7 @@ node_js:
   - 0.8
 after_install:
   - "export DISPLAY=:99.0"
+  - "export NODE_ENV=test"
   - "sh -e /etc/init.d/xvfb start"
   - "npm start & > /dev/null"
   - "java -jar lib/test/lib/selenium-server-standalone-2.21.0.jar & > /dev/null"
@@ -13,5 +14,3 @@ notifications:
     - cooperq@cooperq.com
 before_script:
   - mysql -uroot < examples/db.sql
-  - cp test/config-test.js config.js
-
