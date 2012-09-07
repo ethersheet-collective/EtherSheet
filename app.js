@@ -9,4 +9,4 @@ if(process.env.NODE_ENV == 'test'){
   config = require('./config');
 }
 
-server = require('./lib/node_modules/server.js').createServer(config);
+server = require('./lib/server').createServer(config);

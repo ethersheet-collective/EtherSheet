@@ -16,11 +16,8 @@
     "jison": ">=0.3.2",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
-    "backbone": "*",
     "socket.io": ">=0.9.5",
-    "stitchit": "*",
-    "jquery": ">=1.7.0",
-    "amdefine": ">=0.0.2"
+    "stitchit": "*"
   },
   "devDependencies": {
     "mocha": ">=1.3.0",

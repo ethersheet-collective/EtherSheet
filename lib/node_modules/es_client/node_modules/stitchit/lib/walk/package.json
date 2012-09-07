@@ -1,0 +1,52 @@
+{
+  "name": "walk",
+  "description": "A node port of python's os.walk",
+  "url": "github.com/coolaj86/node-walk",
+  "keywords": [
+    "util",
+    "os",
+    "sys",
+    "fs",
+    "walk",
+    "walkSync"
+  ],
+  "author": {
+    "name": "AJ ONeal",
+    "email": "coolaj86@gmail.com"
+  },
+  "contributors": [],
+  "dependencies": {
+    "forEachAsync": "~2.2"
+  },
+  "lib": ".",
+  "main": "./walk.js",
+  "version": "2.2.1",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    },
+    {
+      "type": "Apache2",
+      "url": "http://opensource.org/licenses/apache2.0.php"
+    }
+  ],
+  "_npmUser": {
+    "name": "tedsuo",
+    "email": "ted@radicaldesigns.org"
+  },
+  "_id": "walk@2.2.1",
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "_engineSupported": true,
+  "_npmVersion": "1.1.12",
+  "_nodeVersion": "v0.6.14",
+  "_defaultsLoaded": true,
+  "dist": {
+    "shasum": "393c90d3b3424f8b651ef5c75951f3c4706cc38d"
+  },
+  "_from": "walk@*"
+}
