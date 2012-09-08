@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "3.x",
+    "es_client": "*",
     "ejs": ">=0.7.1",
     "jison": ">=0.3.2",
     "mysql": ">=0.9.5",
