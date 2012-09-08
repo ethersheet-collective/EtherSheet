@@ -1,5 +1,5 @@
 {
-  "author": "cooperq",
+  "author": "cooperq, tedsuo",
   "name": "ethersheet",
   "description": "Open Source, Online Spreadsheet Collaboration",
   "version": "0.0.5",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "express": "3.x",
-    "es_client": "*",
+    "es_client": "git://github.com/cooperq/es_client",
     "ejs": ">=0.7.1",
     "jison": ">=0.3.2",
     "mysql": ">=0.9.5",
