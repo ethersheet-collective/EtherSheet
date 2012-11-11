@@ -4,7 +4,8 @@ var EventEmitter = require('events').EventEmitter;
 var sinon = require('sinon');
 
 
-describe('EtherSheet Server', function(){
+describe('Websocket Listeners', function(){
+  /*
   describe('websocket crud endpoints', function(){
     var io, mock, io_mock, emitter;
 
@@ -19,4 +20,5 @@ describe('EtherSheet Server', function(){
       done();
     });
   });
+  */
 });
