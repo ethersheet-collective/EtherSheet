@@ -90,7 +90,7 @@ describe('EtherSheetService', function(){
         done();
       });
     });
-
+    
     it('should find a sheet', function(done){
       es.find_or_create_sheet('test', function(err, sheet, results){
         if(err){
