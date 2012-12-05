@@ -5,7 +5,7 @@
   "version": "0.0.5",
   "repository": {
     "type": "git",
-    "url": "git://github.com/cooperq/EtherSheet.git"
+    "url": "git://github.com/ethersheet-collective/EtherSheet.git"
   },
   "engines": {
     "node": ">=0.6"
