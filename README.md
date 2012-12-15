@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/cooperq/EtherSheet.png)](http://travis-ci.org/cooperq/EtherSheet)
+[![Build Status](https://travis-ci.org/ethersheet-collective/EtherSheet.png?branch=master)](https://travis-ci.org/ethersheet-collective/EtherSheet)
 
 Ether Sheet is a collaborative spreadsheet so that a working group
 can securely work on a spreadsheet document in real time on the web.
