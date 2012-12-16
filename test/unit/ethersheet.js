@@ -1,6 +1,6 @@
 var EtherSheetService = require('../../lib/ethersheet').EtherSheetService;
 var _ = require('underscore');
-var config = require('../config-test.js');
+var config = require('../../config.js');
 var should = require('chai').should();
 
 describe('EtherSheetService', function(){
