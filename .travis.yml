@@ -10,5 +10,5 @@ notifications:
     - ted@radicaldesigns.org 
     - cooperq@cooperq.com
 before_script:
-  - cp examples/config.js config.js
+  - cp examples/config-example.js config.js
   - mysql -uroot < examples/db.sql
