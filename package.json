@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "express": "3.x",
-    "es_client": "git://github.com/cooperq/es_client",
+    "es_client": "git://github.com/ethersheet-collective/es_client",
+    "transactor": "git://github.com/ethersheet-collective/transactor",
     "ejs": ">=0.7.1",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
