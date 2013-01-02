@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "3.x",
     "es_client": "git://github.com/ethersheet-collective/es_client",
+    "es_command": "git://github.com/ethersheet-collective/es_command",
     "transactor": "git://github.com/ethersheet-collective/transactor",
     "ejs": ">=0.7.1",
     "mysql": ">=0.9.5",
