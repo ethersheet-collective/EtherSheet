@@ -1,4 +1,4 @@
-var EtherSheetService = require('../../lib/ethersheet').EtherSheetService;
+var EtherSheetService = require('../../lib/ethersheet_service');
 var _ = require('underscore');
 var config = require('../../config.js');
 var should = require('chai').should();
