@@ -53,12 +53,12 @@ describe('EtherSheetService', function(){
         if(err){
           throw err;
         }
-        sheet.should.have.property('row_index');
-        sheet.should.have.property('col_index');
+        sheet.should.have.property('rows');
+        sheet.should.have.property('cols');
         sheet.should.have.property('cells');
         sheet.cells.should.be.empty;
-        sheet.row_index.length.should.eq(config.default_row_count);
-        sheet.col_index.length.should.eq(config.default_col_count);
+        sheet.rows.length.should.eq(config.default_row_count);
+        sheet.cols.length.should.eq(config.default_col_count);
         done();
       });
     });
