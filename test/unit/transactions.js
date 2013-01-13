@@ -16,20 +16,25 @@ describe('Transactions', function(){
 
   it("should execute the correct action", function(done){
     var expected_result = Object.create(test_command);
-    expected_result.vector = '123';
 
     service.getModel = function(type,id){
       assert.equal(type,test_command.type);
       assert.equal(id,test_command.id);
       return {
         test_action: function(){
-          assert.deepEqual(Array.prototype.slice.call(arguments,0,2),test_command.params);
-          arguments[2](null,expected_result); }
+          // assert correct params are passed in
+          var params = Array.prototype.slice.call(arguments,0,2);
+          var cb = arguments[2];
+          assert.deepEqual(params,test_command.params);
+          cb(null); 
+        }
       }
     };
 
-    transactionHandler('test_channel',JSON.stringify(test_command),function(err,data){
-      assert.deepEqual(data,JSON.stringify(expected_result));
+    var command_string = JSON.stringify(test_command);
+    
+    transactionHandler('test_channel',command_string,function(err,data){
+      assert.deepEqual(data,command_string);
       done(err);
     });
   });
