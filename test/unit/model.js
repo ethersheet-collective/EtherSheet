@@ -25,10 +25,10 @@ describe('Models', function(){
       async.parallel({
         row_id: function(cb){ sheet.rowAt(0,cb); },
         col_id: function(cb){ sheet.colAt(0,cb); }
-      },testUpdate);
+      },testCommit);
 
-      function testUpdate(err,d){
-        sheet.updateCell(d.row_id,d.col_id,test_value,function(err){
+      function testCommit(err,d){
+        sheet.commitCell(d.row_id,d.col_id,test_value,function(err){
           if(err) done(err); 
           es.getModel('sheet',id).getValue(d.row_id,d.col_id,function(err,value){
             if(err) done(err); 
