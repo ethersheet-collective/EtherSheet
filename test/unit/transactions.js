@@ -1,5 +1,6 @@
 var createTransactionHandler = require('../../lib/transaction_handler');
 var assert = require('chai').assert;
+var Command = require('es_command');
 
 describe('Transactions', function(){
   var transactionHandler, service, test_command;
@@ -31,10 +32,10 @@ describe('Transactions', function(){
       }
     };
 
-    var command_string = JSON.stringify(test_command);
+    var c = new Command(Command.serialize(test_command));
     
-    transactionHandler('test_channel',command_string,function(err,data){
-      assert.deepEqual(data,command_string);
+    transactionHandler(c,function(err,data){
+      assert.deepEqual(data,c.getSerializedMessage());
       done(err);
     });
   });
