@@ -1,6 +1,6 @@
 var EtherSheetService = require('../../lib/ethersheet_service');
 var _ = require('underscore');
-var config = require('../../config.js');
+var config = require('../test-config.js');
 var should = require('chai').should();
 var async = require('async');
 
@@ -35,7 +35,7 @@ describe('EtherSheetService', function(){
     });
 
     it('should delete a sheet', function(done){
-      es.createSheet('delete_test',function(err){
+      es.createSheet('delete_test', false, function(err){
         if(err) throw err;
         es.deleteSheet('delete_test',function(err){
           if(err) throw err;
@@ -49,6 +49,7 @@ describe('EtherSheetService', function(){
     });
 
     it('should create a sheet if it does not exist', function(done){
+      es.deleteSheet('create_test',function(err){
       es.getSheet('create_test', function(err, sheet){
         if(err){
           throw err;
@@ -60,6 +61,7 @@ describe('EtherSheetService', function(){
         sheet.rows.length.should.eq(config.default_row_count);
         sheet.cols.length.should.eq(config.default_col_count);
         done();
+      });
       });
     });
     
@@ -85,4 +87,34 @@ describe('EtherSheetService', function(){
       });
     });
   });
+
+  describe('import/export csv', function(){
+    var es;
+    before(function(done){
+      es = new EtherSheetService(config);
+      es.onConnect(done);
+    });
+
+    it('should create a sheet from a csv', function(done){
+      var testsheet = 'testcsv';
+      es.createSheetFromCSV(testsheet, '1,2,3\n4,5,6', function(){
+        es.getSheet(testsheet, function(err, data){
+          data.rows.length.should.equal(3);
+          data.cols.length.should.equal(4);
+          data.cells.should.not.be.empty
+          done();
+        });
+      });
+    });
+
+    it('should create a csv from a sheet', function(done){
+      var testsheet = 'testcsv';
+      es.sheetToCSV(testsheet,  function(err,data){
+        data.should.equal('1,2,3,,\n4,5,6,,\n,,,,\n');
+        done();
+      });
+    });
+
+  });
+
 });
