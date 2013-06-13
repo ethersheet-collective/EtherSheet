@@ -28,7 +28,7 @@ describe('Models', function(){
       },testCommit);
 
       function testCommit(err,d){
-        sheet.commitCell(d.row_id,d.col_id,test_value,function(err){
+        sheet.updateCell(d.row_id,d.col_id,test_value,function(err){
           if(err) done(err); 
           es.getModel('sheet',id).getValue(d.row_id,d.col_id,function(err,value){
             if(err) done(err); 
