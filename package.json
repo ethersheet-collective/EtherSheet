@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "express": "3.x",
-    "es_client": "https://github.com/ethersheet-collective/es_client",
-    "es_command": "https://github.com/ethersheet-collective/es_command",
-    "transactor": "https://github.com/ethersheet-collective/transactor",
+    "es_client": "https://github.com/ethersheet-collective/es_client.git",
+    "es_command": "https://github.com/ethersheet-collective/es_command.git",
+    "transactor": "https://github.com/ethersheet-collective/transactor.git",
     "ejs": ">=0.7.1",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
