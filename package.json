@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "express": "3.x",
-    "es_client": "https://github.com/ethersheet-collective/es_client.git",
+    "es_client": "https://github.com/nikhilben/es_client.git",
     "es_command": "https://github.com/ethersheet-collective/es_command.git",
     "transactor": "https://github.com/ethersheet-collective/transactor.git",
     "ejs": ">=0.7.1",
