@@ -5,21 +5,21 @@
   "version": "0.0.5",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ethersheet-collective/EtherSheet.git"
+    "url": "https://github.com/ethersheet-collective/EtherSheet.git"
   },
   "engines": {
     "node": ">=0.6"
   },
   "dependencies": {
     "express": "3.x",
-    "es_client": "git://github.com/ethersheet-collective/es_client",
-    "es_command": "git://github.com/ethersheet-collective/es_command",
-    "transactor": "git://github.com/ethersheet-collective/transactor",
+    "es_client": "https://github.com/ethersheet-collective/es_client.git",
+    "es_command": "https://github.com/ethersheet-collective/es_command.git",
+    "transactor": "https://github.com/ethersheet-collective/transactor.git",
     "ejs": ">=0.7.1",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
     "sockjs": ">=0.3.5",
-    "ueberDB": "git://github.com/Pita/ueberDB.git",
+    "ueberDB": "https://github.com/Pita/ueberDB.git",
     "csv": "*",
     "async": "*",
     "node-uuid": "*",
