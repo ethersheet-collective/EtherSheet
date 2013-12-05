@@ -12,14 +12,14 @@
   },
   "dependencies": {
     "express": "3.x",
-    "es_client": "https://github.com/ethersheet-collective/es_client.git",
-    "es_command": "https://github.com/ethersheet-collective/es_command.git",
-    "transactor": "https://github.com/ethersheet-collective/transactor.git",
+    "es_client":  "https://api.github.com/repos/ethersheet-collective/es_client/tarball",
+    "es_command": "https://api.github.com/repos/ethersheet-collective/es_command/tarball",
+    "transactor": "https://api.github.com/repos/ethersheet-collective/transactor/tarball",
     "ejs": ">=0.7.1",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
     "sockjs": ">=0.3.5",
-    "ueberDB": "https://github.com/Pita/ueberDB.git",
+    "ueberDB": "https://api.github.com/repos/Pita/ueberDB/tarball",
     "csv": "*",
     "async": "*",
     "node-uuid": "*",
@@ -35,8 +35,7 @@
     "start": "node app.js",
     "test": "make test"
   },
-  "directories" : { 
+  "directories" : {
     "lib" : "./lib"
   }
 }
-

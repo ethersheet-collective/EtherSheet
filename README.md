@@ -8,7 +8,7 @@ Join the project or see it in action at http://www.ethersheet.org
 
 #Installing
 1. Download or git clone Ethersheet onto your server.
-2. run the following command `sudo ./bin/install.sh`
+2. run the following command `npm install`
 3. copy examples/config-example.js to config.js in the main project directory
 4. edit config and put in the database name as well as the username and password
 5. run npm start and navigate to localhost:8080
