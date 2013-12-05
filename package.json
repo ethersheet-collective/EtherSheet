@@ -8,7 +8,7 @@
     "url": "https://github.com/ethersheet-collective/EtherSheet.git"
   },
   "engines": {
-    "node": ">=0.6"
+    "nodejs": ">=0.6"
   },
   "dependencies": {
     "express": "3.x",
