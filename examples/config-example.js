@@ -9,5 +9,6 @@ module.exports = {
   db_type: 'mysql',
   debug: false,
   default_row_count: 100,
-  default_col_count: 20
+  default_col_count: 20,
+  expire_days: 0
 }
