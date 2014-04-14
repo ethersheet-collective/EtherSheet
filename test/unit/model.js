@@ -38,6 +38,16 @@ describe('Models', function(){
         });
       }
     });
+
+    it("touchAccessTime", function(done){
+      sheet.touchAccessTime(function(err,aTime){
+        sheet.db.getMeta(sheet.id, function(err,meta){
+          assert.strictEqual(aTime, meta.lastAccess);
+          done();
+        });
+      });
+    });
+
   });
 
 });
