@@ -3,6 +3,7 @@ var _ = require('underscore');
 var config = require('../test-config.js');
 var should = require('chai').should();
 var async = require('async');
+var assert = require('chai').assert;
 
 describe('EtherSheetService', function(){
 
@@ -89,28 +90,31 @@ describe('EtherSheetService', function(){
   });
 
   describe('import/export csv', function(){
-    var es;
+    var es, testsheet, sheet;
     before(function(done){
       es = new EtherSheetService(config);
       es.onConnect(done);
+      testsheet = 'testcsv2';
+      sheet = es.getModel('sheet',testsheet);
     });
 
     it('should create a sheet from a csv', function(done){
-      var testsheet = 'testcsv';
       es.createSheetFromCSV(testsheet, '1,2,3\n4,5,6', function(){
         es.getSheet(testsheet, function(err, data){
-          data.rows.length.should.equal(3);
-          data.cols.length.should.equal(4);
-          data.cells.should.not.be.empty
+          var rowId = data.rows[1];
+          var colId = data.cols[1];
+          var val = data.cells[rowId][colId].value;
+          assert.strictEqual('5', val);
           done();
         });
       });
     });
 
     it('should create a csv from a sheet', function(done){
-      var testsheet = 'testcsv';
+      var testsheet = 'testcsv2';
       es.sheetToCSV(testsheet,  function(err,data){
-        data.should.equal('1,2,3,,\n4,5,6,,\n,,,,\n');
+        assert.include(data,'1,2,3,,,');
+        assert.include(data,'4,5,6,,,');
         done();
       });
     });
