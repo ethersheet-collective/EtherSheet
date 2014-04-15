@@ -58,6 +58,8 @@ describe('EtherSheetService', function(){
         sheet.should.have.property('rows');
         sheet.should.have.property('cols');
         sheet.should.have.property('cells');
+        sheet.should.have.property('meta');
+        sheet.meta.should.have.property('lastAccess');
         sheet.cells.should.be.empty;
         sheet.rows.length.should.eq(config.default_row_count);
         sheet.cols.length.should.eq(config.default_col_count);
@@ -87,6 +89,22 @@ describe('EtherSheetService', function(){
         });
       });
     });
+
+    it('getSheet() should update access time', function(done){
+      es.getMeta('test_sheet',function(err,meta){
+        var oldTime = meta.lastAccess;
+        es.getSheet('test_sheet',function(err,data){});
+        setTimeout(function(){
+          es.getMeta('test_sheet',function(err,meta){
+            var newTime = meta.lastAccess;
+            var updated = newTime > oldTime;
+            assert.isTrue(updated, 'the access time was updated');
+            done();
+          });
+        }, 1000);
+      });
+    });
+
   });
 
   describe('import/export csv', function(){
