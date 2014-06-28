@@ -14,7 +14,7 @@
     "express": "3.x",
     "es_client":  "ethersheet-collective/es_client",
     "es_command": "ethersheet-collective/es_command",
-    "transactor": "ethersheet-collective/es_transactor",
+    "transactor": "ethersheet-collective/transactor",
     "ejs": ">=0.7.1",
     "mysql": ">=0.9.5",
     "underscore": ">=1.3",
