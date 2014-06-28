@@ -15,7 +15,7 @@ Join the project or see it in action at http://www.ethersheet.org
 
 #Developing
 1. Run the following command in your terminal:
-`curl https://raw.github.com/ethersheet-collective/EtherSheet/master/dev_install.sh | bash`
+`curl https://raw.githubusercontent.com/ethersheet-collective/EtherSheet/master/dev_install.sh | bash`
 2. copy examples/config-example.js to config.js in the EtherSheet directory
 3. edit config and put in the database name as well as the username and password
 
