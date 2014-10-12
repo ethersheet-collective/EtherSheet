@@ -6,14 +6,15 @@ It allows people to collaborate on spreadsheets over the internet in real time.
 
 Join the project or see it in action at http://www.ethersheet.org
 
-#Installing
-1. Download or git clone Ethersheet onto your server.
-2. run the following command `npm install`
-3. copy examples/config-example.js to config.js in the main project directory
-4. edit config and put in the database name as well as the username and password
-5. run npm start and navigate to localhost:8080
+#For Users
+1. Download the latest version of ethesheet from https://ethersheet.org/releases/ethersheet_latest.tgz
+2. Unpack the tarball and run the script named `install.sh`
+3. run npm start and navigate to localhost:8080
 
-#Developing
+## Verifying the package
+You can verify the authenticity of the tarball by checking its signature with our gpg key. You can always find the latest signature file at https://ethersheet.org/releases/ethersheet_latest.tgz.sig and you can find our key at https://ethersheet.org/static/ethersheet_gpg_key.asc
+
+#For Developers
 1. Run the following command in your terminal:
 `curl https://raw.githubusercontent.com/ethersheet-collective/EtherSheet/master/dev_install.sh | bash`
 2. copy examples/config-example.js to config.js in the EtherSheet directory
