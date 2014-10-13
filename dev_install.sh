@@ -16,27 +16,26 @@ git clone https://github.com/ethersheet-collective/ref-binder.git
 echo '*** INSTALLING es_expression *************************'
 cd es_expression
 npm install
-sudo npm link
 cd ../
 echo '*** INSTALLING transactor ****************************'
 cd transactor
 npm install
-sudo npm link
 cd ../
 echo '*** INSTALLING es_command ****************************'
 cd es_command
 npm install
-sudo npm link
 cd ../
 echo '*** INSTALLING es_client *****************************'
 cd es_client
 npm install
-sudo npm link
 cd ../
 echo '*** INSTALLING EtherSheet ****************************'
 cd EtherSheet
 npm install
-npm link es_client
-npm link es_command
-npm link transactor
+echo 
+echo "Enter sudo password to link ethersheet packages for development"
+echo
+sudo npm link ../es_client
+sudo npm link ../es_command
+sudo npm link ../transactor
 echo 'DONE'
