@@ -2,7 +2,7 @@
   "author": "cooperq, tedsuo",
   "name": "ethersheet",
   "description": "Open Source, Online Spreadsheet Collaboration",
-  "version": "0.0.5",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/ethersheet-collective/EtherSheet.git"
