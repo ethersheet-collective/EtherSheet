@@ -1,17 +1,17 @@
 echo "Installing Ethersheet"
 
-if ! [ `which node` ]; then
-  echo "You need to install nodejs for your platform! Install it via your package manager or at http://nodejs.org"
+if [ ! `which node` ] && [ ! `which nodejs` ]; then
+  echo "You need to install nodejs for your platform! Install it via your package manager or at https://nodejs.org"
   exit 1
 fi
 
 if ! [ `which npm` ]; then
-  echo "You need to install npm for your platform! Install it via your package manager or at http://nodejs.org"
+  echo "You need to install npm for your platform! Install it via your package manager or at https://www.npmjs.com"
   exit 1
 fi
 
 if ! [ `which mysql` ]; then
-  echo "You need to install mysql for your platform! Install it via your package manager or at https://nodejs.org"
+  echo "You need to install mysql for your platform! Install it via your package manager or at https://www.mysql.com"
   exit 1
 fi
 
