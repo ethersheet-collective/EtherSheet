@@ -4,7 +4,7 @@ Ethersheet
 Ether Sheet is a collaborative, realtime open source spreadsheet.
 It allows people to collaborate on spreadsheets over the internet in real time.
 
-Join the project or see it in action at http://www.ethersheet.org
+Join the project or see it in action at https://www.ethersheet.org
 
 #For Users
 1. Download the latest version of ethesheet from https://ethersheet.org/releases/ethersheet_latest.tgz
@@ -21,7 +21,7 @@ You can verify the authenticity of the tarball by checking its signature with ou
 3. edit config and put in the database name as well as the username and password
 
 #Dependencies
-Ethersheet is only supported on linux and mysql as of right now, it's possible that it will work on windows or with postgres or some other database, but we haven't tested it on those platforms.   If you want to submit a feature, send a pull request and we will look it over and accept it if it looks good.
+Ethersheet is only supported on GNU/Linux and MySQL as of right now. It's possible that it will work on Windows or with PostgreSQL or some other database, but we haven't tested it on those platforms. If you want to submit a feature, send a pull request and we will look it over and accept it if it looks good.
 
 #Running tests
 To run server tests run `npm test` in the EtherSheet server directory
