@@ -8,14 +8,14 @@
 *Expression
 *CellValue
 
-##Views
+## Views
 *Table
 *ExpressionEditor
 *TableControls
 *ConnectedUsers
 *SettingsEditor
 
-#Transport
+# Transport
 *SocketConnection
 
 Implementation Notes
